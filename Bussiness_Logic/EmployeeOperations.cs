@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 using System.Globalization;
 using System.Reflection;
 using Employee_Directory_Console_app.Models;
+using Bussiness_Logic;
 
 namespace Employee_Directory_Console_app.BussinesLogic
 {
@@ -14,15 +15,7 @@ namespace Employee_Directory_Console_app.BussinesLogic
 
         public EmployeeOperations()
         {
-            string jsonData = File.ReadAllText("C:\\Users\\ashwith.p\\source\\repos\\ashwith-p\\Task-5-Csharp-Console-Application\\Database\\EmployeeData.json");
-            if (string.IsNullOrEmpty(jsonData))
-            {
-                EmployeeCollection = [];
-            }
-            else
-            {
-                EmployeeCollection = JsonSerializer.Deserialize<List<Employee>>(jsonData)!;
-            }
+            EmployeeCollection = DatabaseOperations.GetInformation<Employee>();
         }
         public static string[] GetStaticData(string name)
         {
@@ -125,7 +118,7 @@ namespace Employee_Directory_Console_app.BussinesLogic
                 if (index!=null)
                 {
                     EmployeeCollection.Remove(index);
-                    SerializeJSONdata(EmployeeCollection);
+                    DatabaseOperations.SerializeJSONdata<Employee>(EmployeeCollection);
                     return true;
                 }
             }
@@ -135,14 +128,10 @@ namespace Employee_Directory_Console_app.BussinesLogic
         public void SetEmployeeCollection(Employee employee)
         {
             EmployeeCollection.Add(employee);
-            SerializeJSONdata(EmployeeCollection);
+            DatabaseOperations.SerializeJSONdata<Employee>(EmployeeCollection);
         }
 
-        public static void SerializeJSONdata(List<Employee> employeesInformation)
-        {
-            string jsonString = JsonSerializer.Serialize(employeesInformation);
-            File.WriteAllText("C:\\Users\\ashwith.p\\source\\repos\\ashwith-p\\Task-5-Csharp-Console-Application\\Database\\EmployeeData.json", jsonString);
-        }
+        
         public Employee? FindEmployee(string empNo)
         {
             if (EmployeeCollection.Count <= 0)
