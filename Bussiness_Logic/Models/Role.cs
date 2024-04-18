@@ -10,7 +10,7 @@ namespace Employee_Directory_Console_app.Models
     {
         public string Name { get; set; } = string.Empty;        
         public string Department { get; set; } = string.Empty;
-        public string Description { get; set; } = string.Empty;
+        public string? Description { get; set; }
         public string Location { get; set; } = string.Empty;        
     }
 }

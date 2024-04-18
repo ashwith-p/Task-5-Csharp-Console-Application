@@ -20,7 +20,7 @@ namespace Employee_Directory_Console_app.BussinesLogic
                 Department = keyValues["Department"]
             };
             Rolesinformation.Add(Role);
-            DatabaseOperations.SerializeJSONdata<Role>(Rolesinformation);
+            DatabaseOperations.SerializeJSONdata(Rolesinformation);
         }
         
         public List<Role> GetRoleData()

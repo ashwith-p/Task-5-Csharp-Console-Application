@@ -3,29 +3,21 @@ using Employee_Directory_Console_app.Utilities.TypedEnums;
 using Employee_Directory_Console_app.Models;
 using Employee_Directory_Console_app.Utilities.Helpers;
 using Employee_Directory_Console_app.BussinesLogic;
+using Bussiness_Logic.Exceptions;
+using System.Numerics;
 
 namespace Employee_Directory_Console_app.Display
 {
-    public class DisplayService
+    public class EmployeeManagementService
     {
-        private static readonly EmployeeDetailsDelegate[] employeeDetailsDelegates = new EmployeeDetailsDelegate[2];
-        public static EmployeeDetailsDelegate[] FunctionsArray = employeeDetailsDelegates;
-        public DisplayService()
-        {
-            EmployeeOperations EmployeeOperationsObj = new();
-            
-            FunctionsArray[0] = new EmployeeDetailsDelegate(GetEmployeeDetails); //name,done
-            FunctionsArray[1] = new EmployeeDetailsDelegate(GetStaticValues);
-        }
-        public delegate string EmployeeDetailsDelegate(EmployeeOperations obj, string choice,string message); //naming,done
-        public void Init()
+        public static void Init()
         {
             ConsoleHelpers.ConsoleOutput("1.Employee Managament");
             ConsoleHelpers.ConsoleOutput("2.Roles Managament");
             ConsoleHelpers.ConsoleOutput("3.Exit");
             Console.Write("Enter the choice:");
             int choice = int.Parse(ConsoleHelpers.ConsoleIntegerInput());
-            _ = new DisplayService();
+            _ = new EmployeeManagementService();
             switch (choice)
             {
                 case 1:
@@ -62,7 +54,7 @@ namespace Employee_Directory_Console_app.Display
             {
                 case 1:
                     ConsoleHelpers.ConsoleOutput("-------------------------");
-                    AddEmployee(employeeObj);
+                    ReadEmployee(employeeObj);
                     break;
                 case 2:
                     ConsoleHelpers.ConsoleOutput("---------------------------");
@@ -74,18 +66,21 @@ namespace Employee_Directory_Console_app.Display
                     break;
                 case 4:
                     ConsoleHelpers.ConsoleOutput("--------------------------");
-                    EditEmployee(employeeObj);
+                    EditEmployeeInputService(employeeObj);
                     break;
                 case 5:
                     ConsoleHelpers.ConsoleOutput("--------------------------");
                     Console.Write("Enter the Id:");
-                    if (employeeObj.DeleteEmployee(Console.ReadLine() ?? ""))
+                    try
                     {
-                        ConsoleHelpers.ConsoleOutput("Deleted Successfully");
+                        if(employeeObj.DeleteEmployee(Console.ReadLine() ?? ""))
+                        {
+                            ConsoleHelpers.ConsoleOutput("Deleted Successfully");
+                        }
                     }
-                    else
+                    catch(EmployeeIdNotFoundException )
                     {
-                        ConsoleHelpers.ConsoleOutput("InValid Employee Number");
+                        ConsoleHelpers.ConsoleOutput("EmployeeId does not Exist\n");
                     }
                     break;
                 case 6:
@@ -109,7 +104,7 @@ namespace Employee_Directory_Console_app.Display
             {
                 case 1:
                     ConsoleHelpers.ConsoleOutput("--------------------------");
-                    AddRole(role);
+                    ReadRole(role);
                     break;
                 case 2:
                     ConsoleHelpers.ConsoleOutput("--------------------------");
@@ -124,7 +119,7 @@ namespace Employee_Directory_Console_app.Display
             }
             RoleDisplayOperations();
         }
-        public static void AddEmployee(EmployeeOperations employeeOperationsObj)
+        public static void ReadEmployee(EmployeeOperations employeeOperationsObj)
         {
             Employee employee = new ();
             Employee? isIdUnique=new() ; //name && bool
@@ -210,85 +205,85 @@ namespace Employee_Directory_Console_app.Display
             {
                 Id = GetEmployeeDetails(new EmployeeOperations(), nameof(Employee.Id));
             }
-            List<Employee> employees = obj.GetEmployeesInformation(Id);
-            if (employees.Count == 0 )
+            try
             {
-                if (displayOption == DisplayType.DisplayOne)
-                {   Console.WriteLine("Employee Number does not Exist");
-                    Console.WriteLine("");
-                }
-                else
+                IEnumerable<Employee>? employees = obj.GetEmployeesInformation(Id);
+                foreach (Employee employee in employees)
                 {
-                    ConsoleHelpers.ConsoleOutput("No Employees ");
+                    Type type = typeof(Employee);
+                    foreach (PropertyInfo prop in type.GetProperties())
+                    {
+                        Console.WriteLine($"{prop.Name} : {prop.GetValue(employee)}");
+                    }
+                    Console.WriteLine("----------------------------------------------");
+                    Console.WriteLine("----------------------------------------------");
                 }
+                
             }
-
-            foreach (Employee employee in employees)
+            catch(EmployeeIdNotFoundException)
             {
-                Type type = typeof(Employee);
-                foreach (PropertyInfo prop in type.GetProperties())
-                {
-                    Console.WriteLine($"{prop.Name} : {prop.GetValue(employee)}");
-
-                }
-                Console.WriteLine("----------------------------------------------");
-                Console.WriteLine("----------------------------------------------");
+                ConsoleHelpers.ConsoleOutput("EmployeeId does not Exist\n");
             }
         }
-        public static void EditEmployee(EmployeeOperations employeeObj)
+        public static void EditEmployeeInputService(EmployeeOperations employeeObj)
         {
-            string Number;
-            while (true)
+            try
             {
-                Number = GetEmployeeDetails(employeeObj, nameof(Employee.Id));
-                if (employeeObj.FindEmployee(Number) != null)
+                string Number = GetEmployeeDetails(employeeObj, nameof(Employee.Id));
+                Employee? employee = employeeObj.FindEmployee(Number);
+                if (employee == null)
                 {
-                    break;
+                    throw new EmployeeIdNotFoundException();
                 }
-            }
-            Employee employee = employeeObj.FindEmployee(Number)!;
-            bool status = false;
-            while (!status)
-            {
-                Type type = typeof(Employee);
-                int i = 1;
-                Dictionary<int, string> pair = [];
-                foreach (PropertyInfo prop in type.GetProperties())
+                bool status = false;
+                while (!status)
                 {
-                    Console.WriteLine($"{i} {prop.Name}");
-                    pair[i] = prop.Name;
-                    i++;
-                }
-                Console.Write("Enter the choise:");
-                int choice = int.Parse(Console.ReadLine() ?? "0");
-                if (choice > 0 && choice <= 12)
-                { 
-                    string Value = "";
-                    if (choice==10 || choice==12)
+                    Type type = typeof(Employee);
+                    int i = 1;
+                    Dictionary<int, string> pair = [];
+                    foreach (PropertyInfo prop in type.GetProperties())
                     {
-                        Value = FunctionsArray[1](employeeObj, pair[choice], $"Enter the {pair[choice]}");
+                        Console.WriteLine($"{i} {prop.Name}");
+                        pair[i] = prop.Name;
+                        i++;
+                    }
+                    Console.Write("Enter the choise:");
+                    int choice = int.Parse(ConsoleHelpers.ConsoleIntegerInput());
+                    if (choice > 0 && choice <= 12)
+                    {
+                        string Value = "";
+                        if (choice == 10 || choice == 12)
+                        {
+                            Value = GetStaticValues(employeeObj, pair[choice], $"Enter the {pair[choice]}");
+                        }
+                        else
+                        {
+                            Value = GetEmployeeDetails(employeeObj, pair[choice], string.Empty);
+                        }
+                        EmployeeOperations.EditEmployee(employee, pair, choice, Value);
+                        employeeObj.DeleteEmployee(Number);
+                        employeeObj.SetEmployeeCollection(employee);
                     }
                     else
                     {
-                        Value = FunctionsArray[0](employeeObj, pair[choice],string.Empty);
+                        ConsoleHelpers.ConsoleOutput("Enter Valid Input:");
                     }
-                    EmployeeOperations.EditEmployee(employee, pair, choice, Value);
-                    employeeObj.DeleteEmployee(Number);
-                    employeeObj.SetEmployeeCollection(employee);
-                }
-                else
-                {
-                    ConsoleHelpers.ConsoleOutput("Enter Valid Input:");
-                }
-                ConsoleHelpers.ConsoleOutput("Do you want to continue(Y/N)");
-                var select = Console.ReadLine();
-                if (select?.ToLower() == "n")
-                {
-                    status = true;
+                    ConsoleHelpers.ConsoleOutput("Do you want to continue(Y/N)");
+                    var select = Console.ReadLine();
+                    if (select?.ToLower() == "n")
+                    {
+                        status = true;
+                    }
                 }
             }
+            catch (EmployeeIdNotFoundException)
+            {
+                ConsoleHelpers.ConsoleOutput("EmployeeId does not Exist\n");
+            }
+
+
         }
-        public static void AddRole(RoleOperations role)
+        public static void ReadRole(RoleOperations role)
         {
             bool flag = false;
             string roleName = "";

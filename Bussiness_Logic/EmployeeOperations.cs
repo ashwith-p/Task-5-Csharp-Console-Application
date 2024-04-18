@@ -4,14 +4,13 @@ using System.Globalization;
 using System.Reflection;
 using Employee_Directory_Console_app.Models;
 using Bussiness_Logic;
+using Bussiness_Logic.Exceptions;
 
 namespace Employee_Directory_Console_app.BussinesLogic
 {
      public class EmployeeOperations
     {
         public List<Employee> EmployeeCollection { get; set; } //name,done
-
-        
 
         public EmployeeOperations()
         {
@@ -82,7 +81,6 @@ namespace Employee_Directory_Console_app.BussinesLogic
 
 
                 case nameof(Employee.Location):
-                    return IsValidName(data);
                 case nameof(Employee.JobTitle):
                     return IsValidName(data);
                 case nameof(Employee.Department):
@@ -112,17 +110,14 @@ namespace Employee_Directory_Console_app.BussinesLogic
 
         public bool DeleteEmployee(string empNo)
         {
-            if (empNo.Length == 6 && empNo[..2] == "TZ" && int.TryParse(empNo[2..], out _))
+            Employee? index = FindEmployee(empNo);
+            if (index==null)
             {
-                Employee? index = FindEmployee(empNo);
-                if (index!=null)
-                {
-                    EmployeeCollection.Remove(index);
-                    DatabaseOperations.SerializeJSONdata<Employee>(EmployeeCollection);
-                    return true;
-                }
+                throw new EmployeeIdNotFoundException();
             }
-            return false;
+            bool result=EmployeeCollection.Remove(index);
+            DatabaseOperations.SerializeJSONdata<Employee>(EmployeeCollection);
+            return result;
         }
 
         public void SetEmployeeCollection(Employee employee)
@@ -130,19 +125,11 @@ namespace Employee_Directory_Console_app.BussinesLogic
             EmployeeCollection.Add(employee);
             DatabaseOperations.SerializeJSONdata<Employee>(EmployeeCollection);
         }
-
         
         public Employee? FindEmployee(string empNo)
         {
-            if (EmployeeCollection.Count <= 0)
-            {
-                return null;
-            }
-            else
-            {
-                Employee? employee = EmployeeCollection.FirstOrDefault(e => e.Id == empNo);
-                return employee;
-            }
+            Employee? employee = EmployeeCollection.FirstOrDefault(e => e.Id == empNo);
+            return employee;
         }
         public List<Employee> GetEmployeesInformation(string empNo)
         {
@@ -153,9 +140,9 @@ namespace Employee_Directory_Console_app.BussinesLogic
             else
             {
                 Employee? index = FindEmployee(empNo);
-                if (index !=null)
-                    return [index];
-                return [];
+                if (index ==null)
+                    throw new EmployeeIdNotFoundException();
+                return [index];
             }
         }
         public static void EditEmployee(Employee emp, Dictionary<int, string> pair, int choice, string value)

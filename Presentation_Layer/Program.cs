@@ -3,7 +3,7 @@ class Employee_Project
 {
     public static void Main()
     {
-        new DisplayService().Init();
+        EmployeeManagementService.Init();
     }
 }
 
