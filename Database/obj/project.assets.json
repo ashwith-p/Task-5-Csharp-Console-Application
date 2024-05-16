@@ -14,9 +14,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ashwith.p\\Source\\Repos\\ashwith-p\\Task-5-Csharp-Console-Application\\Database\\Database.csproj",
-      "projectName": "Database",
-      "projectPath": "C:\\Users\\ashwith.p\\Source\\Repos\\ashwith-p\\Task-5-Csharp-Console-Application\\Database\\Database.csproj",
+      "projectUniqueName": "C:\\Users\\ashwith.p\\Source\\Repos\\ashwith-p\\Task-5-Csharp-Console-Application\\Database\\Data.csproj",
+      "projectName": "Data",
+      "projectPath": "C:\\Users\\ashwith.p\\Source\\Repos\\ashwith-p\\Task-5-Csharp-Console-Application\\Database\\Data.csproj",
       "packagesPath": "C:\\Users\\ashwith.p\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\ashwith.p\\Source\\Repos\\ashwith-p\\Task-5-Csharp-Console-Application\\Database\\obj\\",
       "projectStyle": "PackageReference",

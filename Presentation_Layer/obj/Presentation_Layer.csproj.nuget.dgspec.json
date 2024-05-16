@@ -4,12 +4,12 @@
     "C:\\Users\\ashwith.p\\Source\\Repos\\ashwith-p\\Task-5-Csharp-Console-Application\\Presentation_Layer\\Presentation_Layer.csproj": {}
   },
   "projects": {
-    "C:\\Users\\ashwith.p\\Source\\Repos\\ashwith-p\\Task-5-Csharp-Console-Application\\Bussiness_Logic\\Bussiness_Logic.csproj": {
+    "C:\\Users\\ashwith.p\\Source\\Repos\\ashwith-p\\Task-5-Csharp-Console-Application\\Bussiness_Logic\\BussinessLogic.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ashwith.p\\Source\\Repos\\ashwith-p\\Task-5-Csharp-Console-Application\\Bussiness_Logic\\Bussiness_Logic.csproj",
-        "projectName": "Bussiness_Logic",
-        "projectPath": "C:\\Users\\ashwith.p\\Source\\Repos\\ashwith-p\\Task-5-Csharp-Console-Application\\Bussiness_Logic\\Bussiness_Logic.csproj",
+        "projectUniqueName": "C:\\Users\\ashwith.p\\Source\\Repos\\ashwith-p\\Task-5-Csharp-Console-Application\\Bussiness_Logic\\BussinessLogic.csproj",
+        "projectName": "BussinessLogic",
+        "projectPath": "C:\\Users\\ashwith.p\\Source\\Repos\\ashwith-p\\Task-5-Csharp-Console-Application\\Bussiness_Logic\\BussinessLogic.csproj",
         "packagesPath": "C:\\Users\\ashwith.p\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\ashwith.p\\Source\\Repos\\ashwith-p\\Task-5-Csharp-Console-Application\\Bussiness_Logic\\obj\\",
         "projectStyle": "PackageReference",
@@ -167,8 +167,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\ashwith.p\\Source\\Repos\\ashwith-p\\Task-5-Csharp-Console-Application\\Bussiness_Logic\\Bussiness_Logic.csproj": {
-                "projectPath": "C:\\Users\\ashwith.p\\Source\\Repos\\ashwith-p\\Task-5-Csharp-Console-Application\\Bussiness_Logic\\Bussiness_Logic.csproj"
+              "C:\\Users\\ashwith.p\\Source\\Repos\\ashwith-p\\Task-5-Csharp-Console-Application\\Bussiness_Logic\\BussinessLogic.csproj": {
+                "projectPath": "C:\\Users\\ashwith.p\\Source\\Repos\\ashwith-p\\Task-5-Csharp-Console-Application\\Bussiness_Logic\\BussinessLogic.csproj"
               }
             }
           }

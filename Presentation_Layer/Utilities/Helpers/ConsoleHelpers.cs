@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Employee_Directory_Console_app.Utilities.Helpers
+﻿namespace EmployeeDirectory.Utilities.Helpers
 {
     public class ConsoleHelpers
     {
@@ -16,14 +10,19 @@ namespace Employee_Directory_Console_app.Utilities.Helpers
                 Console.Write(message);
         }
 
-        public static string ConsoleIntegerInput() //change name,done
+        public static int ConsoleIntegerInput()
         {
             string input = Console.ReadLine() ?? "-1";
-            if (!int.TryParse(input, out var _) || input.Length > 1)
+            int result;
+            if (!int.TryParse(input, out var x) || input.Length > 1)
             {
-                input = "-1";
+                result = -1;
             }
-            return input;
+            else
+            {
+                result = x;
+            }
+            return result;
         }
     }
 }
