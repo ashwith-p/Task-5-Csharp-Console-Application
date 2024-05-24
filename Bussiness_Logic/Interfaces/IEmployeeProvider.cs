@@ -19,14 +19,11 @@ namespace Domain.Interfaces
 
         public bool DeleteEmployee(string email);
 
-        public void SetEmployeeCollection(List<Data.Model.Employee> employee);
-
         public List<DTO.Employee>? GetEmployeesInformation();
 
         public DTO.Employee? GetEmployee(string email);
 
         public void EditEmployee(Dictionary<int, string> pair, int choice, string value, string email);
 
-        public DTO.Employee? FindEmployee(string email);
     }
 }

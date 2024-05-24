@@ -12,47 +12,6 @@ namespace Data
         private const string _connectionString = @"Server=SQL-DEV;Database=Ashwith_EmployeeDirectory;Trusted_Connection=True;";
 
 
-        public void SerializeJSONData<T>(List<T> Information)
-        {
-
-            string jsonString = JsonSerializer.Serialize(Information);
-            if (typeof(T) == typeof(Employee))
-            {
-                File.WriteAllText("C:\\Users\\ashwith.p\\source\\repos\\ashwith-p\\Task-5-Csharp-Console-Application\\Database\\EmployeeData.json", jsonString);
-            }
-            else if (typeof(T) == typeof(Role))
-            {
-                File.WriteAllText("C:\\Users\\ashwith.p\\source\\repos\\ashwith-p\\Task-5-Csharp-Console-Application\\Database\\RoleData.json", jsonString);
-            }
-        }
-
-        public List<T> GetInformation<T>()
-        {
-            string jsonData = string.Empty;
-            if (typeof(T) == typeof(Employee))
-            {
-                jsonData = File.ReadAllText("C:\\Users\\ashwith.p\\source\\repos\\ashwith-p\\Task-5-Csharp-Console-Application\\Database\\EmployeeData.json");
-            }
-            else if (typeof(T) == typeof(Role))
-            {
-                jsonData = File.ReadAllText("C:\\Users\\ashwith.p\\source\\repos\\ashwith-p\\Task-5-Csharp-Console-Application\\Database\\RoleData.json");
-            }
-            if (string.IsNullOrEmpty(jsonData))
-            {
-                return [];
-            }
-            else
-            {
-                return JsonSerializer.Deserialize<List<T>>(jsonData)!;
-            }
-        }
-
-        public void AddData<T>(T data)
-        {
-            List<T> dataList = GetInformation<T>();
-            dataList.Add(data);
-            SerializeJSONData(dataList);
-        }
 
         public bool DeleteData(string email)
         {
@@ -70,25 +29,6 @@ namespace Data
             {
                 throw new Exception(ex.Message);
             }
-        }
-
-        public void SetData(List<Employee> data)
-        {
-            if (data != null)
-            {
-                SerializeJSONData(data);
-            }
-        }
-
-        public Employee? FindEmployee(string email)
-        {
-            if (GetInformation<Employee>() != null)
-            {
-                Employee? employee = GetInformation<Employee>().FirstOrDefault(e => e.Email == email);
-                return employee;
-            }
-            return null;
-
         }
         public List<string> GetStaticData(string name)
         {

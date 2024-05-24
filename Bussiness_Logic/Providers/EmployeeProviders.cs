@@ -170,22 +170,6 @@ namespace Domain.Providers
 
         }
 
-        public void SetEmployeeCollection(List<Data.Model.Employee> employee)
-        {
-            _databaseObj.SetData(employee);
-        }
-
-        public DTO.Employee? FindEmployee(string email)
-        {
-            Data.Model.Employee? employee = _databaseObj.FindEmployee(email);
-            if (employee == null)
-            {
-                return null;
-            }
-            return new DTO.Employee(employee);
-
-        }
-
         public List<DTO.Employee>? GetEmployeesInformation()
         {
             List<DTO.Employee> data = [];
