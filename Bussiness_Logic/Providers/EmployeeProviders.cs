@@ -2,13 +2,15 @@
 using System.Text.RegularExpressions;
 using System.Globalization;
 using System.Reflection;
-using BLL.DTO;
-using DLL.Interfaces;
-using DLL.Exceptions;
-using BLL.Interfaces;
+using Domain.DTO;
+using Data.Interfaces;
+using Data.Exceptions;
+using Domain.Interfaces;
+using Data.Model;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 //
-namespace BLL.Providers
+namespace Domain.Providers
 {
     public class EmployeeProviders : IEmployeeProvider
     {
@@ -20,11 +22,25 @@ namespace BLL.Providers
             _databaseObj = databaseObj;
         }
 
-        public string[] GetStaticData(string name)
+        public List<string> GetStaticData(string name, string? value = null)
         {
-            //change to model
-            Dictionary<string, string[]> keyValuePairs = JsonSerializer.Deserialize<Dictionary<string, string[]>>(File.ReadAllText("C:\\Users\\ashwith.p\\source\\repos\\ashwith-p\\Task-5-Csharp-Console-Application\\Database\\StaticData.json")) ?? [];
-            return keyValuePairs[name];
+            if (value != null)
+            {
+                if (name == nameof(DTO.Employee.JobTitle))
+                {
+                    return _databaseObj.GetRoleNames(value);
+                }
+                else if (name == nameof(DTO.Employee.Location))
+                {
+                    return _databaseObj.GetLocations(value);
+                }
+                else
+                {
+                    return _databaseObj.GetStaticData(value);
+                }
+            }
+
+            return _databaseObj.GetStaticData(name);
         }
 
         public bool IsValidName(string name)
@@ -114,22 +130,22 @@ namespace BLL.Providers
         public void AddEmployee(DTO.Employee emp)
         {
             string id = "TZ" + this.CreateID();
-            DLL.Model.Employee employee = new()
+            Data.Model.Employee employee = new()
             {
                 Id = id,
                 FirstName = emp.FirstName,
                 LastName = emp.LastName,
-                DateOfBirth = emp.DateOfBirth,
+                DateOfBirth = emp.DateOfBirth != null ? DateTime.ParseExact(emp.DateOfBirth, "dd/MM/yyyy", CultureInfo.InvariantCulture) : null,
                 Manager = emp.Manager,
-                MobileNumber = emp.MobileNumber,
+                MobileNumber = emp.MobileNumber != null ? long.Parse(emp.MobileNumber) : null,
                 JobTitle = emp.JobTitle,
-                JoiningDate = emp.JoiningDate,
+                JoiningDate = DateTime.ParseExact(emp.JoiningDate, "dd/MM/yyyy", CultureInfo.InvariantCulture),
                 Department = emp.Department,
                 Email = emp.Email,
                 Location = emp.Location,
                 Project = emp.Project,
             };
-            _databaseObj.AddData(employee);
+            _databaseObj.AddEmployee(employee);
 
         }
 
@@ -138,7 +154,7 @@ namespace BLL.Providers
             int min = 1000;
             int max = 9999;
             Random rdm = new();
-            return Convert.ToString(rdm.Next(min,max));
+            return Convert.ToString(rdm.Next(min, max));
         }
 
         public bool DeleteEmployee(string email)
@@ -151,18 +167,18 @@ namespace BLL.Providers
             {
                 throw new EmployeeIdNotFoundException();
             }
-            
+
         }
 
-        public void SetEmployeeCollection(List<DLL.Model.Employee> employee)
+        public void SetEmployeeCollection(List<Data.Model.Employee> employee)
         {
             _databaseObj.SetData(employee);
         }
 
         public DTO.Employee? FindEmployee(string email)
         {
-            DLL.Model.Employee? employee=_databaseObj.FindEmployee(email);
-            if(employee == null)
+            Data.Model.Employee? employee = _databaseObj.FindEmployee(email);
+            if (employee == null)
             {
                 return null;
             }
@@ -172,35 +188,28 @@ namespace BLL.Providers
 
         public List<DTO.Employee>? GetEmployeesInformation()
         {
-            List<DTO.Employee> data = []; 
-            List<DLL.Model.Employee> list = _databaseObj.GetInformation<DLL.Model.Employee>();
-            foreach (DLL.Model.Employee employee in list)
+            List<DTO.Employee> data = [];
+            List<Data.Model.Employee> list = _databaseObj.GetEmployees();
+            foreach (Data.Model.Employee employee in list)
             {
                 data.Add(new DTO.Employee(employee));
             }
             return data;
         }
 
-        public DTO.Employee? GetEmployee(string email)
+        public DTO.Employee? GetEmployee(string id)
         {
-            if (!string.IsNullOrEmpty(email))
+            if (!string.IsNullOrEmpty(id))
             {
-                DTO.Employee? index = FindEmployee(email);
-                return index ?? throw new EmployeeIdNotFoundException();
+                List<Data.Model.Employee> list = _databaseObj.GetEmployees(id);
+                return new DTO.Employee(list[0]) ?? throw new EmployeeIdNotFoundException();
             }
             return null;
         }
 
-        public void EditEmployee(DTO.Employee emp, Dictionary<int, string> pair, int choice, string value)
+        public void EditEmployee(Dictionary<int, string> pair, int choice, string value, string email)
         {
-            Type prop = typeof(DLL.Model.Employee);
-            DLL.Model.Employee? employee = _databaseObj.FindEmployee(emp.Email);
-            _databaseObj.DeleteData(emp.Email);
-            PropertyInfo propertyValue = prop.GetProperty(pair[choice])!;
-            propertyValue.SetValue(employee, value);
-            List<DLL.Model.Employee> employees = _databaseObj.GetInformation<DLL.Model.Employee>();
-            employees.Add(employee!);
-            _databaseObj.SerializeJSONData(employees);
+            _databaseObj.EditEmployeeData(pair, choice, value, email);
         }
     }
 }

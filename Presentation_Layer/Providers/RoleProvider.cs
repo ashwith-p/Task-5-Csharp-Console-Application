@@ -1,17 +1,17 @@
 ﻿using EmployeeDirectory.Utilities.Helpers;
-using BLL.DTO;
+using Domain.DTO;
 using System.Reflection;
-using BLL.Providers;
+using Domain.Providers;
 using EmployeeDirectory.Interfaces;
 
 namespace EmployeeDirectory.Providers
 {
-    internal class RoleProvider:IRoleProvider
+    internal class RoleProvider : IRoleProvider
     {
-        private readonly BLL.Interfaces.IRoleProvider _roleProvider;
+        private readonly Domain.Interfaces.IRoleProvider _roleProvider;
         private readonly IEmployeeProvider _employeeProvider;
 
-        public RoleProvider(BLL.Interfaces.IRoleProvider roleProvider, IEmployeeProvider employeeProvider)
+        public RoleProvider(Domain.Interfaces.IRoleProvider roleProvider, IEmployeeProvider employeeProvider)
         {
             _roleProvider = roleProvider;
             _employeeProvider = employeeProvider;
@@ -22,8 +22,8 @@ namespace EmployeeDirectory.Providers
             ConsoleHelpers.ConsoleOutput("1.Add Role");
             ConsoleHelpers.ConsoleOutput("2.Display All");
             ConsoleHelpers.ConsoleOutput("3. Go back");
-            ConsoleHelpers.ConsoleOutput("Enter the choice:",false);
-            
+            ConsoleHelpers.ConsoleOutput("Enter the choice:", false);
+
             int choice = ConsoleHelpers.ConsoleIntegerInput();
             switch (choice)
             {
@@ -54,14 +54,14 @@ namespace EmployeeDirectory.Providers
 
         public void ReadRole()
         {
-            
+
             Role Role = new();
             Type type = typeof(Role);
             foreach (PropertyInfo prop in type.GetProperties())
             {
-                ConsoleHelpers.ConsoleOutput($"Enter the Value for {prop.Name}:",false);
+                ConsoleHelpers.ConsoleOutput($"Enter the Value for {prop.Name}:", false);
                 PropertyInfo property = type.GetProperty(prop.Name)!;
-                if (prop.Name == nameof(BLL.DTO.Role.Department))
+                if (prop.Name == nameof(Domain.DTO.Role.Department) || prop.Name == nameof(Domain.DTO.Role.Location))
                 {
                     property.SetValue(Role, _employeeProvider.GetStaticValues(prop.Name));
                 }
@@ -75,7 +75,7 @@ namespace EmployeeDirectory.Providers
             {
                 for (int i = 0; i < errorList.Count; i++)
                 {
-                    ConsoleHelpers.ConsoleOutput($"Enter the Value for {errorList[i]}:",false);
+                    ConsoleHelpers.ConsoleOutput($"Enter the Value for {errorList[i]}:", false);
                     PropertyInfo property = type.GetProperty(errorList[i])!;
                     if (errorList[i] == nameof(Employee.Department))
                     {
@@ -105,5 +105,7 @@ namespace EmployeeDirectory.Providers
                 ConsoleHelpers.ConsoleOutput("----------------------------------------------");
             }
         }
+
+
     }
 }

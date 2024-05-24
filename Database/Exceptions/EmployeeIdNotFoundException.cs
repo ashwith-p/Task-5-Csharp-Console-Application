@@ -1,4 +1,4 @@
-﻿namespace DLL.Exceptions
+﻿namespace Data.Exceptions
 {
     public class EmployeeIdNotFoundException:Exception
     {

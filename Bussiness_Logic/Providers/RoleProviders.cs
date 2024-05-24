@@ -1,10 +1,10 @@
-﻿using BLL.DTO;
-using DLL.Interfaces;
-using DLL.Model;
+﻿using Domain.DTO;
+using Data.Interfaces;
+using Data.Model;
 using System.Reflection;
-using BLL.Interfaces;
+using Domain.Interfaces;
 
-namespace BLL.Providers
+namespace Domain.Providers
 {
     public class RoleProviders : IRoleProvider
     {
@@ -13,7 +13,7 @@ namespace BLL.Providers
 
         private readonly IEmployeeProvider _employeeObj;
 
-        public RoleProviders(IDatabaseOperations databaseObj,IEmployeeProvider employeeObj)
+        public RoleProviders(IDatabaseOperations databaseObj, IEmployeeProvider employeeObj)
         {
             _databaseObj = databaseObj;
             _employeeObj = employeeObj;
@@ -56,8 +56,8 @@ namespace BLL.Providers
         public List<DTO.Role> GetRoleData()
         {
             List<DTO.Role> roleDTOs = [];
-            List<DLL.Model.Role> roles = _databaseObj.GetInformation<DLL.Model.Role>();
-            foreach (DLL.Model.Role role in roles)
+            List<Data.Model.Role> roles = _databaseObj.GetRoles();
+            foreach (Data.Model.Role role in roles)
             {
                 DTO.Role roleDTO = new()
                 {
@@ -71,17 +71,19 @@ namespace BLL.Providers
             return roleDTOs;
         }
 
+
+
         public void AddRole(DTO.Role Role)
         {
-            DLL.Model.Role role = new()
+            Data.Model.Role role = new()
             {
-                Id = _employeeObj.CreateID(),
+                Id = new Random().Next(100, 999),
                 Name = Role.Name,
                 Description = Role.Description,
                 Location = Role.Location,
                 Department = Role.Department,
             };
-            _databaseObj.AddData(role);
+            _databaseObj.AddRole(role);
         }
     }
 }

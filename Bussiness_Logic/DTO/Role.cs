@@ -1,4 +1,4 @@
-﻿namespace BLL.DTO
+﻿namespace Domain.DTO
 {
     public class Role
     {

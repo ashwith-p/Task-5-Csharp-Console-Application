@@ -21,3 +21,9 @@ C:\Users\ashwith.p\Source\Repos\ashwith-p\Task-5-Csharp-Console-Application\Pres
 C:\Users\ashwith.p\Source\Repos\ashwith-p\Task-5-Csharp-Console-Application\Presentation_Layer\bin\Debug\net8.0\Data.pdb
 C:\Users\ashwith.p\Source\Repos\ashwith-p\Task-5-Csharp-Console-Application\Presentation_Layer\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.dll
 C:\Users\ashwith.p\Source\Repos\ashwith-p\Task-5-Csharp-Console-Application\Presentation_Layer\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\ashwith.p\source\repos\ashwith-p\Task-5-Csharp-Console-Application\Presentation_Layer\bin\Debug\net8.0\System.Data.SqlClient.dll
+C:\Users\ashwith.p\source\repos\ashwith-p\Task-5-Csharp-Console-Application\Presentation_Layer\bin\Debug\net8.0\runtimes\win-arm64\native\sni.dll
+C:\Users\ashwith.p\source\repos\ashwith-p\Task-5-Csharp-Console-Application\Presentation_Layer\bin\Debug\net8.0\runtimes\win-x64\native\sni.dll
+C:\Users\ashwith.p\source\repos\ashwith-p\Task-5-Csharp-Console-Application\Presentation_Layer\bin\Debug\net8.0\runtimes\win-x86\native\sni.dll
+C:\Users\ashwith.p\source\repos\ashwith-p\Task-5-Csharp-Console-Application\Presentation_Layer\bin\Debug\net8.0\runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll
+C:\Users\ashwith.p\source\repos\ashwith-p\Task-5-Csharp-Console-Application\Presentation_Layer\bin\Debug\net8.0\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll

@@ -1,6 +1,6 @@
-﻿using BLL.DTO;
+﻿using Domain.DTO;
 
-namespace BLL.Interfaces
+namespace Domain.Interfaces
 {
     public interface IRoleProvider
     {

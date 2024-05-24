@@ -1,5 +1,5 @@
 ﻿
-namespace DLL.Model
+namespace Data.Model
 {
     public class Employee
     {
@@ -9,13 +9,13 @@ namespace DLL.Model
 
         public string LastName { get; set; } = string.Empty;
 
-        public string? DateOfBirth { get; set; }
+        public DateTime? DateOfBirth { get; set; }
 
         public string Email { get; set; } = string.Empty;
 
-        public string? MobileNumber { get; set; }
+        public long? MobileNumber { get; set; }
 
-        public string JoiningDate { get; set; } = string.Empty;
+        public DateTime JoiningDate { get; set; } 
 
         public string Location { get; set; } = string.Empty;
 

@@ -1,11 +1,11 @@
-﻿using BLL.DTO;
-using DLL.Model;
+﻿using Domain.DTO;
+using Data.Model;
 
-namespace BLL.Interfaces
+namespace Domain.Interfaces
 {
     public interface IEmployeeProvider
     {
-        public string[] GetStaticData(string name);
+        public List<string> GetStaticData(string name, string? value = null);
 
         public bool IsValidName(string name);
 
@@ -19,13 +19,13 @@ namespace BLL.Interfaces
 
         public bool DeleteEmployee(string email);
 
-        public void SetEmployeeCollection(List<DLL.Model.Employee> employee);
+        public void SetEmployeeCollection(List<Data.Model.Employee> employee);
 
         public List<DTO.Employee>? GetEmployeesInformation();
 
         public DTO.Employee? GetEmployee(string email);
 
-        public void EditEmployee(DTO.Employee emp, Dictionary<int, string> pair, int choice, string value);
+        public void EditEmployee(Dictionary<int, string> pair, int choice, string value, string email);
 
         public DTO.Employee? FindEmployee(string email);
     }

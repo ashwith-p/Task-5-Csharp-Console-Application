@@ -1,6 +1,6 @@
-﻿using DLL.Model;
+﻿using Data.Model;
 
-namespace DLL
+namespace Data
 {
     public class ErrorMessages
     {

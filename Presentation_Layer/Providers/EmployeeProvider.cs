@@ -1,36 +1,36 @@
 ﻿using System.Reflection;
-using BLL.DTO;
+using Domain.DTO;
 using EmployeeDirectory.Utilities.Helpers;
 using EmployeeDirectory.Interfaces;
-using BLL.Providers;
-using DLL.Exceptions;
-using DLL;
+using Domain.Providers;
+using Data.Exceptions;
+using Data;
 
 
 namespace EmployeeDirectory.Providers
 {
     public class EmployeeProvider : IEmployeeProvider
     {
-        
-        private readonly BLL.Interfaces.IEmployeeProvider _provider;
+
+        private readonly Domain.Interfaces.IEmployeeProvider _provider;
         private readonly ErrorMessages _errorMessages = new();
-        public EmployeeProvider(BLL.Interfaces.IEmployeeProvider provider)
+        public EmployeeProvider(Domain.Interfaces.IEmployeeProvider provider)
         {
             _provider = provider;
         }
 
         public void EmployeeDisplayOperations()
         {
-            
+
             ConsoleHelpers.ConsoleOutput("1.Add Employee");
             ConsoleHelpers.ConsoleOutput("2.Display All");
             ConsoleHelpers.ConsoleOutput("3.Display One");
             ConsoleHelpers.ConsoleOutput("4.Edit Employee");
             ConsoleHelpers.ConsoleOutput("5.Delete Employee");
             ConsoleHelpers.ConsoleOutput("6.Go back");
-            ConsoleHelpers.ConsoleOutput("Enter the choice:",false);
+            ConsoleHelpers.ConsoleOutput("Enter the choice:", false);
             int choice = ConsoleHelpers.ConsoleIntegerInput();
-            
+
             switch (choice)
             {
 
@@ -44,7 +44,7 @@ namespace EmployeeDirectory.Providers
                     break;
                 case 3:
                     ConsoleHelpers.ConsoleOutput("--------------------------");
-                    GetEmployeeByEmail();
+                    GetEmployeeById();
                     break;
                 case 4:
                     ConsoleHelpers.ConsoleOutput("--------------------------");
@@ -52,19 +52,19 @@ namespace EmployeeDirectory.Providers
                     break;
                 case 5:
                     ConsoleHelpers.ConsoleOutput("--------------------------");
-                    ConsoleHelpers.ConsoleOutput("Enter the EmailId:",false);
+                    ConsoleHelpers.ConsoleOutput("Enter the EmailId:", false);
                     try
                     {
-                        if(_provider.DeleteEmployee(Console.ReadLine() ?? ""))
+                        if (_provider.DeleteEmployee(Console.ReadLine() ?? ""))
                         {
                             ConsoleHelpers.ConsoleOutput("Deleted Successfully");
                         }
                     }
-                    catch(DLL.Exceptions.EmployeeIdNotFoundException )
+                    catch (EmployeeIdNotFoundException)
                     {
                         ConsoleHelpers.ConsoleOutput("Employee does not Exist\n");
                     }
-                    
+
                     break;
                 case 6:
                     ConsoleHelpers.ConsoleOutput("--------------------------");
@@ -89,11 +89,26 @@ namespace EmployeeDirectory.Providers
             Type type = typeof(Employee);
             foreach (PropertyInfo prop in type.GetProperties())
             {
-                ConsoleHelpers.ConsoleOutput($"Enter the Value for {prop.Name}:",false);
+                ConsoleHelpers.ConsoleOutput($"Enter the Value for {prop.Name}:", false);
                 PropertyInfo property = type.GetProperty(prop.Name)!;
                 if (prop.Name == nameof(Employee.Department) || prop.Name == nameof(Employee.Project))
                 {
                     property.SetValue(employee, GetStaticValues(prop.Name));
+                }
+                else if (prop.Name == nameof(Employee.JobTitle))
+                {
+                    string? value = employee.GetType().GetProperty(nameof(employee.Department))!.GetValue(employee)!.ToString();
+                    property.SetValue(employee, GetStaticValues(prop.Name, string.Empty, value));
+                }
+                else if (prop.Name == nameof(Employee.Location))
+                {
+                    string? value = employee.GetType().GetProperty(nameof(employee.JobTitle))!.GetValue(employee)!.ToString();
+                    property.SetValue(employee, GetStaticValues(prop.Name, string.Empty, value));
+                }
+                else if (prop.Name == nameof(Employee.Manager))
+                {
+                    string? managerId = GetStaticValues(prop.Name, string.Empty, "Employee");
+                    property.SetValue(employee, managerId != null ? managerId!.Substring(0, 7) : null);
                 }
                 else
                 {
@@ -106,11 +121,25 @@ namespace EmployeeDirectory.Providers
                 for (int i = 0; i < inCorrect.Count; i++)
                 {
                     ConsoleHelpers.ConsoleOutput(_errorMessages.messages[inCorrect[i]]);
-                    ConsoleHelpers.ConsoleOutput($"Enter the Value for {inCorrect[i]}:",false);
+                    ConsoleHelpers.ConsoleOutput($"Enter the Value for {inCorrect[i]}:", false);
                     PropertyInfo property = type.GetProperty(inCorrect[i])!;
                     if (inCorrect[i] == nameof(Employee.Department) || inCorrect[i] == nameof(Employee.Project))
                     {
                         property.SetValue(employee, GetStaticValues(inCorrect[i]));
+                    }
+                    else if (inCorrect[i] == nameof(Employee.JobTitle))
+                    {
+                        string? value = employee.GetType().GetProperty(nameof(employee.Department))!.GetValue(employee)!.ToString();
+                        property.SetValue(employee, GetStaticValues(inCorrect[i], string.Empty, value));
+                    }
+                    else if (inCorrect[i] == nameof(Employee.Location))
+                    {
+                        string? value = employee.GetType().GetProperty(nameof(employee.JobTitle))!.GetValue(employee)!.ToString();
+                        property.SetValue(employee, GetStaticValues(inCorrect[i], string.Empty, value));
+                    }
+                    else if (inCorrect[i] == nameof(Employee.Manager))
+                    {
+                        property.SetValue(employee, GetStaticValues(inCorrect[i], string.Empty, "Employee"));
                     }
                     else
                     {
@@ -136,7 +165,7 @@ namespace EmployeeDirectory.Providers
             {
                 if (!string.IsNullOrEmpty(message))
                 {
-                    ConsoleHelpers.ConsoleOutput(message,false);
+                    ConsoleHelpers.ConsoleOutput(message, false);
                 }
                 else
                 {
@@ -160,24 +189,24 @@ namespace EmployeeDirectory.Providers
         /// <param name="choice"></param>
         /// <param name="message"></param>
         /// <returns>Static data for projects and departments.</returns>
-        public string GetStaticValues(string choice, string message = "")
+        public string? GetStaticValues(string choice, string message = "", string? staticValue = null)
         {
-            string[] staticData;
-            staticData = _provider.GetStaticData(choice);
+            List<string> staticData;
+            staticData = _provider.GetStaticData(choice, staticValue);
             string value = string.Empty;
             ConsoleHelpers.ConsoleOutput("");
-            for (int i = 0; i < staticData.Length; i++)
+            for (int i = 0; i < staticData.Count; i++)
             {
                 ConsoleHelpers.ConsoleOutput($"{i + 1}.{staticData[i]}");
             }
             string input = Console.ReadLine() ?? string.Empty;
-            if (choice == nameof(Employee.Project) && input.Length == 0)
+            if ((choice == nameof(Employee.Project) || choice == nameof(Employee.Manager)) && input.Length == 0)
             {
-                return value;
+                return null;
             }
             if (int.TryParse(input, out int x))
             {
-                if (x > 0 && x <= staticData.Length)
+                if (x > 0 && x <= staticData.Count)
                 {
                     value = staticData[int.Parse(input) - 1];
                 }
@@ -203,19 +232,19 @@ namespace EmployeeDirectory.Providers
                 }
 
             }
-            catch (DLL.Exceptions.EmployeeIdNotFoundException)
+            catch (EmployeeIdNotFoundException)
             {
                 ConsoleHelpers.ConsoleOutput("Employee does not Exist\n");
             }
         }
 
-        public void GetEmployeeByEmail()
+        public void GetEmployeeById()
         {
-            ConsoleHelpers.ConsoleOutput("Enter the EmailID:",false);
-            string email = Console.ReadLine() ?? string.Empty;
+            ConsoleHelpers.ConsoleOutput("Enter the EmailID:", false);
+            string id = Console.ReadLine() ?? string.Empty;
             try
             {
-                Employee employee = _provider.GetEmployee(email) ?? throw new EmployeeIdNotFoundException();
+                Employee employee = _provider.GetEmployee(id) ?? throw new EmployeeIdNotFoundException();
                 Type type = typeof(Employee);
                 foreach (PropertyInfo prop in type.GetProperties())
                 {
@@ -233,9 +262,9 @@ namespace EmployeeDirectory.Providers
         {
             try
             {
-                ConsoleHelpers.ConsoleOutput("Enter the Email ID:",false);
-                string Email = Console.ReadLine()??string.Empty;
-                Employee employee = (_provider.FindEmployee(Email) ?? throw new EmployeeIdNotFoundException()) ?? throw new DLL.Exceptions.EmployeeIdNotFoundException();
+                ConsoleHelpers.ConsoleOutput("Enter the Email ID:", false);
+                string Email = Console.ReadLine() ?? string.Empty;
+                Employee employee = _provider.GetEmployee(Email) ?? throw new EmployeeIdNotFoundException();
                 bool status = false;
                 while (!status)
                 {
@@ -248,22 +277,51 @@ namespace EmployeeDirectory.Providers
                         pair[i] = prop.Name;
                         i++;
                     }
-                    ConsoleHelpers.ConsoleOutput("Enter the choice:",false);
+                    ConsoleHelpers.ConsoleOutput("Enter the choice:", false);
+                    bool isValidInput = false;
                     int choice = ConsoleHelpers.ConsoleIntegerInput();
-                    if (choice > 0 && choice <= 12)
+                    if (choice > 0 && choice < 12)
                     {
-                        string Value = "";
-                        if (choice == 10 || choice == 12)
+                        string data = string.Empty;
+                        if (pair[choice] == nameof(Employee.Department))
                         {
-                            Value = GetStaticValues(pair[choice], $"Enter the {pair[choice]}");
+                            ConsoleHelpers.ConsoleOutput("You cant edit the department");
+                            break;
+                        }
+                        else if (pair[choice] == nameof(Employee.JobTitle))
+                        {
+                            string? value = employee.GetType().GetProperty(nameof(employee.Department))!.GetValue(employee)!.ToString();
+                            data = GetStaticValues(pair[choice], "Enter the value of" + pair[choice] + ':', value)!;
+                        }
+                        else if (pair[choice] == nameof(Employee.Location))
+                        {
+                            string? value = employee.GetType().GetProperty(nameof(employee.JobTitle))!.GetValue(employee)!.ToString();
+                            data = GetStaticValues(pair[choice], "Enter the value of" + pair[choice] + ':', value)!;
+                        }
+                        else if (pair[choice] == nameof(Employee.Manager))
+                        {
+                            data = GetStaticValues(pair[choice], "Enter the value of" + pair[choice] + ':', "Employee")!;
+                        }
+                        else if (pair[choice] == nameof(Employee.Project))
+                        {
+                            data = GetStaticValues(pair[choice], "Enter the value of" + pair[choice] + ':')!;
                         }
                         else
                         {
-                            Value = GetInputData(pair[choice], string.Empty);
+                            data = GetInputData(pair[choice], string.Empty);
                         }
-                        _provider.EditEmployee(employee, pair, choice, Value);
+                        isValidInput = _provider.IsValidEmployee(data, pair[choice]);
+                        if (isValidInput)
+                        {
+                            _provider.EditEmployee(pair, choice, data, Email);
+                        }
+                        //_provider.EditEmployee(employee, pair, choice, data);
                     }
                     else
+                    {
+                        isValidInput = false;
+                    }
+                    if (!isValidInput)
                     {
                         ConsoleHelpers.ConsoleOutput("Enter Valid Input:");
                     }
@@ -275,7 +333,7 @@ namespace EmployeeDirectory.Providers
                     }
                 }
             }
-            catch (DLL.Exceptions.EmployeeIdNotFoundException)
+            catch (EmployeeIdNotFoundException)
             {
                 ConsoleHelpers.ConsoleOutput("Employee does not Exist\n");
             }

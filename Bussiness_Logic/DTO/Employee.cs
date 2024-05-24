@@ -1,5 +1,5 @@
 ﻿
-namespace BLL.DTO
+namespace Domain.DTO
 {
     public class Employee
     {
@@ -28,20 +28,21 @@ namespace BLL.DTO
         public Employee()
         {}
 
-        public Employee(DLL.Model.Employee emp )
+        public Employee(Data.Model.Employee emp )
         {
             this.FirstName = emp.FirstName;
             this.LastName = emp.LastName;
-            this.DateOfBirth = emp.DateOfBirth;
+            this.DateOfBirth = emp.DateOfBirth==null?null:emp.DateOfBirth.ToString();
             this.Email = emp.Email;
-            this.MobileNumber = emp.MobileNumber;
+            this.MobileNumber = emp.MobileNumber==null?null:emp.MobileNumber.ToString();
             this.Project = emp.Project;
             this.Department = emp.Department;
             this.Manager = emp.Manager;
             this.Location = emp.Location;
             this.JobTitle = emp.JobTitle;
-            this.JoiningDate = emp.JoiningDate;
+            this.JoiningDate = emp.JoiningDate.ToString();
         }
     }
 
 }
+
