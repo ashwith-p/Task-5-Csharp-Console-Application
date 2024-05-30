@@ -240,7 +240,7 @@ namespace EmployeeDirectory.Providers
 
         public void GetEmployeeById()
         {
-            ConsoleHelpers.ConsoleOutput("Enter the EmailID:", false);
+            ConsoleHelpers.ConsoleOutput("Enter the Employee ID:", false);
             string id = Console.ReadLine() ?? string.Empty;
             try
             {
@@ -262,7 +262,7 @@ namespace EmployeeDirectory.Providers
         {
             try
             {
-                ConsoleHelpers.ConsoleOutput("Enter the Email ID:", false);
+                ConsoleHelpers.ConsoleOutput("Enter the Employee ID:", false);
                 string Email = Console.ReadLine() ?? string.Empty;
                 Employee employee = _provider.GetEmployee(Email) ?? throw new EmployeeIdNotFoundException();
                 bool status = false;

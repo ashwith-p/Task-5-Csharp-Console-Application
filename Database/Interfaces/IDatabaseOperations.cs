@@ -1,4 +1,4 @@
-﻿using Data.Model;
+﻿using Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,26 +9,8 @@ namespace Data.Interfaces
 {
     public interface IDatabaseOperations
     {
-        
 
-        public void AddRole(Role role);
+        public IEnumerable<string> GetStaticData(string role);
 
-        public bool DeleteData(string email);
-
-        int? GetId(string table, string name);
-
-        List<string> GetRoleNames(string department);
-
-        List<string> GetStaticData(string role);
-
-        public List<string> GetLocations(string role);
-
-        public List<Role> GetRoles();
-
-        public void AddEmployee(Employee employee);
-
-        public List<Employee> GetEmployees(string? id = null);
-
-        public void EditEmployeeData(Dictionary<int, string> pair, int choice, string value, string email);
     }
 }

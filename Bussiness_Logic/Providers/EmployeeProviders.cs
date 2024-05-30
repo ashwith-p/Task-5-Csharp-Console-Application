@@ -6,8 +6,6 @@ using Domain.DTO;
 using Data.Interfaces;
 using Data.Exceptions;
 using Domain.Interfaces;
-using Data.Model;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 //
 namespace Domain.Providers
@@ -16,10 +14,22 @@ namespace Domain.Providers
     {
 
         private readonly IDatabaseOperations _databaseObj;
+        private readonly IEmployeeDataProvider _employeeDataProvider;
+        private readonly IRoleDataProvider _roleDataProvider;
+        private readonly IProjectProvider _projectProvider;
+        private readonly ILocationProvider _locationProvider;
+        private readonly IDepartmentProvider _departmentProvider;
 
-        public EmployeeProviders(IDatabaseOperations databaseObj)
+        public EmployeeProviders(IDatabaseOperations databaseObj,IEmployeeDataProvider employeeDataProvider,IRoleDataProvider roleDataProvider,IDepartmentProvider departmentProvider
+            ,ILocationProvider locationProvider,IProjectProvider projectProvider)
         {
             _databaseObj = databaseObj;
+            _employeeDataProvider = employeeDataProvider;
+            _roleDataProvider = roleDataProvider;
+            _projectProvider = projectProvider;
+            _locationProvider = locationProvider;
+            _departmentProvider = departmentProvider;
+
         }
 
         public List<string> GetStaticData(string name, string? value = null)
@@ -28,19 +38,19 @@ namespace Domain.Providers
             {
                 if (name == nameof(DTO.Employee.JobTitle))
                 {
-                    return _databaseObj.GetRoleNames(value);
+                    return _roleDataProvider.GetRoleNamesByDepartment(value).ToList();
                 }
                 else if (name == nameof(DTO.Employee.Location))
                 {
-                    return _databaseObj.GetLocations(value);
+                    return _locationProvider.GetLocationsByRole(value).ToList();
                 }
                 else
                 {
-                    return _databaseObj.GetStaticData(value);
+                    return _employeeDataProvider.GetEmployeeNames().ToList();
                 }
             }
 
-            return _databaseObj.GetStaticData(name);
+            return _databaseObj.GetStaticData(name).ToList();
         }
 
         public bool IsValidName(string name)
@@ -48,7 +58,7 @@ namespace Domain.Providers
             return name.Length > 3;
         }
 
-        public bool IsValidEmployee(string value, string type) //name,done
+        public bool IsValidEmployee(string value, string type) 
         {
             string data = value.Trim();
 
@@ -130,22 +140,30 @@ namespace Domain.Providers
         public void AddEmployee(DTO.Employee emp)
         {
             string id = "TZ" + this.CreateID();
-            Data.Model.Employee employee = new()
+            string? managerId = emp.Manager != null ? _employeeDataProvider.GetEmployee(emp.Manager) != null ? _employeeDataProvider.GetEmployee(emp.Manager)!.Id : null : null;
+            Data.Models.Employee employee = new()
             {
                 Id = id,
                 FirstName = emp.FirstName,
                 LastName = emp.LastName,
-                DateOfBirth = emp.DateOfBirth != null ? DateTime.ParseExact(emp.DateOfBirth, "dd/MM/yyyy", CultureInfo.InvariantCulture) : null,
-                Manager = emp.Manager,
+                DateOfBirth = emp.DateOfBirth != null ? DateOnly.ParseExact(emp.DateOfBirth, "dd/MM/yyyy", CultureInfo.InvariantCulture) : null,
+                ManagerId = managerId,
                 MobileNumber = emp.MobileNumber != null ? long.Parse(emp.MobileNumber) : null,
-                JobTitle = emp.JobTitle,
-                JoiningDate = DateTime.ParseExact(emp.JoiningDate, "dd/MM/yyyy", CultureInfo.InvariantCulture),
-                Department = emp.Department,
+                RoleId = _roleDataProvider.GetRoleByName(emp.JobTitle).Id,
+                JoiningDate = DateOnly.ParseExact(emp.JoiningDate, "dd/MM/yyyy", CultureInfo.InvariantCulture),
+                Department = _departmentProvider.GetDepartmentByName(emp.Department),
                 Email = emp.Email,
-                Location = emp.Location,
-                Project = emp.Project,
+                Location = _locationProvider.GetLocationByName(emp.Location),
+                Project = _projectProvider.GetProjectByName(emp.Project),
+                ProjectId= _projectProvider.GetProjectByName(emp.Project)!=null? _projectProvider.GetProjectByName(emp.Project)!.Id:null,
+                DepartmentId= _departmentProvider.GetDepartmentByName(emp.Department).Id,
+                LocationId= _locationProvider.GetLocationByName(emp.Location).Id,
+                Role= _roleDataProvider.GetRoleByName(emp.JobTitle),
+                Manager = emp.Manager != null ? _employeeDataProvider.GetEmployee(emp.Manager) != null ? _employeeDataProvider.GetEmployee(emp.Manager)!: null : null,
+                InverseManager=_employeeDataProvider.GetEmployesUnderManager(managerId)!=null? _employeeDataProvider.GetEmployesUnderManager(managerId)!.ToList():null!,
+
             };
-            _databaseObj.AddEmployee(employee);
+            _employeeDataProvider.Add(employee);
 
         }
 
@@ -157,11 +175,11 @@ namespace Domain.Providers
             return Convert.ToString(rdm.Next(min, max));
         }
 
-        public bool DeleteEmployee(string email)
+        public bool DeleteEmployee(string id)
         {
             try
             {
-                return _databaseObj.DeleteData(email);
+                return _employeeDataProvider.Delete(id);
             }
             catch (EmployeeIdNotFoundException)
             {
@@ -173,8 +191,8 @@ namespace Domain.Providers
         public List<DTO.Employee>? GetEmployeesInformation()
         {
             List<DTO.Employee> data = [];
-            List<Data.Model.Employee> list = _databaseObj.GetEmployees();
-            foreach (Data.Model.Employee employee in list)
+            List<Data.Models.Employee> list = _employeeDataProvider.GetEmployees().ToList();
+            foreach (Data.Models.Employee employee in list)
             {
                 data.Add(new DTO.Employee(employee));
             }
@@ -185,15 +203,15 @@ namespace Domain.Providers
         {
             if (!string.IsNullOrEmpty(id))
             {
-                List<Data.Model.Employee> list = _databaseObj.GetEmployees(id);
-                return new DTO.Employee(list[0]) ?? throw new EmployeeIdNotFoundException();
+                Data.Models.Employee employee = _employeeDataProvider.GetEmployee(id)!;
+                return new DTO.Employee(employee) ?? throw new EmployeeIdNotFoundException();
             }
             return null;
         }
 
         public void EditEmployee(Dictionary<int, string> pair, int choice, string value, string email)
         {
-            _databaseObj.EditEmployeeData(pair, choice, value, email);
+            _employeeDataProvider.EditEmployee(pair, choice, value, email);
         }
     }
 }

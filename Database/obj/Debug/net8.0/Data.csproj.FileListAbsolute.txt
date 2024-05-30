@@ -11,3 +11,5 @@ C:\Users\ashwith.p\Source\Repos\ashwith-p\Task-5-Csharp-Console-Application\Data
 C:\Users\ashwith.p\Source\Repos\ashwith-p\Task-5-Csharp-Console-Application\Database\obj\Debug\net8.0\Data.pdb
 C:\Users\ashwith.p\Source\Repos\ashwith-p\Task-5-Csharp-Console-Application\Database\obj\Debug\net8.0\ref\Data.dll
 C:\Users\ashwith.p\source\repos\ashwith-p\Task-5-Csharp-Console-Application\Database\obj\Debug\net8.0\Data.csproj.AssemblyReference.cache
+C:\Users\ashwith.p\source\repos\ashwith-p\Task-5-Csharp-Console-Application\Database\bin\Debug\net8.0\Data.runtimeconfig.json
+C:\Users\ashwith.p\source\repos\ashwith-p\Task-5-Csharp-Console-Application\Database\obj\Debug\net8.0\Data.genruntimeconfig.cache

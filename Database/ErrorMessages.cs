@@ -1,4 +1,4 @@
-﻿using Data.Model;
+﻿using Data.Models;
 
 namespace Data
 {
@@ -14,7 +14,7 @@ namespace Data
             { nameof(Employee.JoiningDate), "The joining date should be of format dd/mm/yyyy" },
             { nameof(Employee.Location), "The Location should be minimum of 4 characters"},
             { nameof(Employee.Department), "Enter the valid input for the department choose any one from below."},
-            { nameof(Employee.JobTitle), "The JobTitle should be minimum of 4 characters"},
+            { "JobTitle", "The JobTitle should be minimum of 4 characters"},
             { nameof(Employee.Manager), "The Manager should be minimum of 4 characters"}
         };
     }

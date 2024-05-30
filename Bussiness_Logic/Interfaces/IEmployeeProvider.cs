@@ -1,5 +1,5 @@
 ﻿using Domain.DTO;
-using Data.Model;
+using Data.Models;
 
 namespace Domain.Interfaces
 {

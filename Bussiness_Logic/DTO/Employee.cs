@@ -1,4 +1,8 @@
 ﻿
+using Microsoft.EntityFrameworkCore.Storage;
+using Data;
+using Data.Models;
+using Data.Interfaces;
 namespace Domain.DTO
 {
     public class Employee
@@ -15,11 +19,11 @@ namespace Domain.DTO
 
         public string JoiningDate { get; set; } = string.Empty;
 
-        public string Location { get; set; } = string.Empty;
+        public string Department { get; set; } = string.Empty;
 
         public string JobTitle { get; set; } = string.Empty;
 
-        public string Department { get; set; } = string.Empty;
+        public string Location { get; set; } = string.Empty;
 
         public string? Manager { get; set; } 
 
@@ -28,18 +32,19 @@ namespace Domain.DTO
         public Employee()
         {}
 
-        public Employee(Data.Model.Employee emp )
+        public Employee(Data.Models.Employee emp)
         {
+            
             this.FirstName = emp.FirstName;
             this.LastName = emp.LastName;
             this.DateOfBirth = emp.DateOfBirth==null?null:emp.DateOfBirth.ToString();
             this.Email = emp.Email;
             this.MobileNumber = emp.MobileNumber==null?null:emp.MobileNumber.ToString();
-            this.Project = emp.Project;
-            this.Department = emp.Department;
-            this.Manager = emp.Manager;
-            this.Location = emp.Location;
-            this.JobTitle = emp.JobTitle;
+            this.Project = emp.Project!=null?emp.Project.Name:null;
+            this.Department = emp.Department.Name;
+            this.Manager = emp.Manager!=null?emp.Manager.FirstName+' '+emp.Manager.LastName:null;
+            this.Location = emp.Location.Name;
+            this.JobTitle = emp.Role.Name;
             this.JoiningDate = emp.JoiningDate.ToString();
         }
     }
