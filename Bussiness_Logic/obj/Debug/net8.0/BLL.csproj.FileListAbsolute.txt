@@ -1,0 +1,16 @@
+C:\Users\ashwith.p\Source\Repos\ashwith-p\Task-5-Csharp-Console-Application\Bussiness_Logic\bin\Debug\net8.0\BLL.deps.json
+C:\Users\ashwith.p\Source\Repos\ashwith-p\Task-5-Csharp-Console-Application\Bussiness_Logic\bin\Debug\net8.0\BLL.dll
+C:\Users\ashwith.p\Source\Repos\ashwith-p\Task-5-Csharp-Console-Application\Bussiness_Logic\bin\Debug\net8.0\BLL.pdb
+C:\Users\ashwith.p\Source\Repos\ashwith-p\Task-5-Csharp-Console-Application\Bussiness_Logic\bin\Debug\net8.0\DLL.dll
+C:\Users\ashwith.p\Source\Repos\ashwith-p\Task-5-Csharp-Console-Application\Bussiness_Logic\bin\Debug\net8.0\DLL.pdb
+C:\Users\ashwith.p\Source\Repos\ashwith-p\Task-5-Csharp-Console-Application\Bussiness_Logic\obj\Debug\net8.0\BLL.csproj.AssemblyReference.cache
+C:\Users\ashwith.p\Source\Repos\ashwith-p\Task-5-Csharp-Console-Application\Bussiness_Logic\obj\Debug\net8.0\BLL.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ashwith.p\Source\Repos\ashwith-p\Task-5-Csharp-Console-Application\Bussiness_Logic\obj\Debug\net8.0\BLL.AssemblyInfoInputs.cache
+C:\Users\ashwith.p\Source\Repos\ashwith-p\Task-5-Csharp-Console-Application\Bussiness_Logic\obj\Debug\net8.0\BLL.AssemblyInfo.cs
+C:\Users\ashwith.p\Source\Repos\ashwith-p\Task-5-Csharp-Console-Application\Bussiness_Logic\obj\Debug\net8.0\BLL.csproj.CoreCompileInputs.cache
+C:\Users\ashwith.p\Source\Repos\ashwith-p\Task-5-Csharp-Console-Application\Bussiness_Logic\obj\Debug\net8.0\BLL.sourcelink.json
+C:\Users\ashwith.p\Source\Repos\ashwith-p\Task-5-Csharp-Console-Application\Bussiness_Logic\obj\Debug\net8.0\BLL.csproj.Up2Date
+C:\Users\ashwith.p\Source\Repos\ashwith-p\Task-5-Csharp-Console-Application\Bussiness_Logic\obj\Debug\net8.0\BLL.dll
+C:\Users\ashwith.p\Source\Repos\ashwith-p\Task-5-Csharp-Console-Application\Bussiness_Logic\obj\Debug\net8.0\refint\BLL.dll
+C:\Users\ashwith.p\Source\Repos\ashwith-p\Task-5-Csharp-Console-Application\Bussiness_Logic\obj\Debug\net8.0\BLL.pdb
+C:\Users\ashwith.p\Source\Repos\ashwith-p\Task-5-Csharp-Console-Application\Bussiness_Logic\obj\Debug\net8.0\ref\BLL.dll
