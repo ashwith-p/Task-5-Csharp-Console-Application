@@ -14,7 +14,7 @@
         {
             string input = Console.ReadLine() ?? "-1";
             int result;
-            if (!int.TryParse(input, out var x) || input.Length > 1)
+            if (!int.TryParse(input, out var x) && input.Length > 1)
             {
                 result = -1;
             }

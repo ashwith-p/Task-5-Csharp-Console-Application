@@ -24,6 +24,10 @@ namespace Data
                 {
                     return _context.Departments.Select(s => s.Name);
                 }
+                else if(name==nameof(RoleDetail.Location))
+                {
+                    return _context.Locations.Select(s => s.Name);
+                }
                 else
                 {
                     return _context.Projects.Select(s => s.Name);

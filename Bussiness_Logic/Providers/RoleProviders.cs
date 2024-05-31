@@ -68,7 +68,7 @@ namespace Domain.Providers
                 {
                     Name = role.Name,
                     Description = role.Description,
-                    Location = _locationProvider.GetLocationsByRole(role.Name).ToArray(),
+                    Location = _locationProvider.GetLocationsByRole(role.Name).ToList(),
                     Department = _departmentProvider.GetDepartment(role.DepartmentId)!.Name,
                 };
                 roleDTOs.Add(roleDTO);
@@ -90,12 +90,13 @@ namespace Domain.Providers
                 Department = _departmentProvider.GetDepartmentByName(Role.Department),
                 Employees = _roleDataProvider.GetEmployeesByRole(roleId).ToList(),
             };
+            _roleDataProvider.Add(role);
             Data.Models.RoleDetail roleDetail = new() { 
                 RoleId = role.Id, 
                 LocationId = _locationProvider.GetLocationByName(Role.Location[0]).Id
                 ,Role=_roleDataProvider.GetRoleById(roleId),
                 Location= _locationProvider.GetLocationByName(Role.Location[0]) };
-            _roleDataProvider.Add(role);
+            
             _roleDetailProvider.Add(roleDetail);
         }
     }

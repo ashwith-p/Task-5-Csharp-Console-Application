@@ -16,5 +16,7 @@ namespace Data.Interfaces
         public Location GetLocationByName(string name);
 
         public IEnumerable<string> GetLocationsByRole(string role);
+
+        public Location GetLocationById(int id);
     }
 }

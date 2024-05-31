@@ -8,6 +8,6 @@
 
         public string? Description { get; set; }
 
-        public string[] Location { get; set; } = [];        
+        public List<string> Location { get; set; } = [];        
     }
 }

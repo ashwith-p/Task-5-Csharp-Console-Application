@@ -50,7 +50,7 @@ public partial class AshwithEmployeeDirectoryContext : DbContext
 
             entity.ToTable("Employee");
 
-            entity.Property(e => e.Id).HasMaxLength(6);
+            entity.Property(e => e.Id).HasMaxLength(7);
             entity.Property(e => e.Email).HasMaxLength(320);
             entity.Property(e => e.FirstName).HasMaxLength(353);
             entity.Property(e => e.LastName).HasMaxLength(35);
@@ -117,7 +117,7 @@ public partial class AshwithEmployeeDirectoryContext : DbContext
 
         modelBuilder.Entity<RoleDetail>(entity =>
         {
-            entity.HasNoKey();
+            entity.HasKey(e=>new {e.RoleId ,e.LocationId});
 
             entity.HasOne(d => d.Location).WithMany()
                 .HasForeignKey(d => d.LocationId)

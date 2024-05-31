@@ -81,12 +81,19 @@ namespace Data.Provider
             return _context.Employees.Select(s => s.Id + ' ' + s.FirstName + ' ' + s.LastName);
         }
 
-        public void EditEmployee(Dictionary<int, string> pair, int choice, string value, string email)
+        public void EditEmployee(Dictionary<int, string> pair, int choice, string value, string employeeId)
         {
             int? id = null;
             bool flag = false;
-            Employee emp = _context.Employees.Where(s => s.Email == email).First();
-            var propertyInfo = typeof(Employee).GetProperty(pair[choice], BindingFlags.Public | BindingFlags.Instance);
+            Employee emp = _context.Employees.Where(s => s.Id==employeeId).First();
+            if (pair[choice]==nameof(Employee.Manager))
+            {
+                pair[choice] = nameof(Employee.ManagerId);
+            }
+            else if (pair[choice]=="JobTitle")
+            {
+                pair[choice]=nameof(Employee.RoleId);
+            }
             if (pair[choice] == nameof(Employee.RoleId))
             {
                 id = _roleDataProvider.GetRoleByName(value).Id;
@@ -94,6 +101,7 @@ namespace Data.Provider
             else if (pair[choice] == nameof(Employee.Project))
             {
                 id = _projectProvider.GetProjectByName(value) != null ? _projectProvider.GetProjectByName(value)!.Id : null;
+                pair[choice] = nameof(Employee.ProjectId);
             }
             else if (pair[choice] == nameof(Employee.Location))
             {
@@ -103,11 +111,13 @@ namespace Data.Provider
             {
                 flag = true;
             }
+            var propertyInfo = typeof(Employee).GetProperty(pair[choice], BindingFlags.Public | BindingFlags.Instance);
             if (flag)
             {
-                if (pair[choice] == nameof(Employee.Manager))
+                if (pair[choice] == nameof(Employee.ManagerId))
                 {
-                    propertyInfo!.SetValue(emp, value.Substring(0, 7));
+                    propertyInfo!.SetValue(emp, value.Substring(0, 6));
+                    Console.WriteLine(value.Substring(0,6).Length);
                 }
                 propertyInfo!.SetValue(emp, value);
             }

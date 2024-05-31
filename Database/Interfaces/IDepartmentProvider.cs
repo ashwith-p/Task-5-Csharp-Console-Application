@@ -14,5 +14,7 @@ namespace Data.Interfaces
         public IEnumerable<Department> GetDepartments();
 
         public Department GetDepartmentByName(string name);
+
+        public Department GetDepartmentById(int id);
     }
 }

@@ -32,7 +32,7 @@ namespace Domain.DTO
         public Employee()
         {}
 
-        public Employee(Data.Models.Employee emp)
+        public Employee(Data.Models.Employee emp,IDepartmentProvider departmentProvider,ILocationProvider locationProvider,IRoleDataProvider roleDataProvider,IProjectProvider projectProvider)
         {
             
             this.FirstName = emp.FirstName;
@@ -40,11 +40,11 @@ namespace Domain.DTO
             this.DateOfBirth = emp.DateOfBirth==null?null:emp.DateOfBirth.ToString();
             this.Email = emp.Email;
             this.MobileNumber = emp.MobileNumber==null?null:emp.MobileNumber.ToString();
-            this.Project = emp.Project!=null?emp.Project.Name:null;
-            this.Department = emp.Department.Name;
+            this.Project = emp.ProjectId!=null?projectProvider.GetProject(emp.ProjectId)!.Name:null;
+            this.Department = departmentProvider.GetDepartment(emp.DepartmentId)!.Name;
             this.Manager = emp.Manager!=null?emp.Manager.FirstName+' '+emp.Manager.LastName:null;
-            this.Location = emp.Location.Name;
-            this.JobTitle = emp.Role.Name;
+            this.Location = locationProvider.GetLocationById(emp.LocationId).Name;
+            this.JobTitle = roleDataProvider.GetRoleById(emp.RoleId).Name;
             this.JoiningDate = emp.JoiningDate.ToString();
         }
     }

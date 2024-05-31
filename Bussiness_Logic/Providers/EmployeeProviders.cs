@@ -194,7 +194,7 @@ namespace Domain.Providers
             List<Data.Models.Employee> list = _employeeDataProvider.GetEmployees().ToList();
             foreach (Data.Models.Employee employee in list)
             {
-                data.Add(new DTO.Employee(employee));
+                data.Add(new DTO.Employee(employee,_departmentProvider,_locationProvider,_roleDataProvider,_projectProvider));
             }
             return data;
         }
@@ -204,9 +204,10 @@ namespace Domain.Providers
             if (!string.IsNullOrEmpty(id))
             {
                 Data.Models.Employee employee = _employeeDataProvider.GetEmployee(id)!;
-                return new DTO.Employee(employee) ?? throw new EmployeeIdNotFoundException();
+                return employee != null ? new DTO.Employee(employee, _departmentProvider, _locationProvider, _roleDataProvider, _projectProvider) : throw new EmployeeIdNotFoundException();
             }
             return null;
+
         }
 
         public void EditEmployee(Dictionary<int, string> pair, int choice, string value, string email)

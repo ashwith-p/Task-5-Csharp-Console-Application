@@ -16,8 +16,9 @@ namespace Data.Provider
         {
             _context = context;
         }
-        public Project? GetProject(int id)
+        public Project? GetProject(int? id)
         {
+            if (id == null) return null;
             return _context.Projects.Where(s => s.Id == id).FirstOrDefault();
         }
         public IEnumerable<Project> GetProjects()

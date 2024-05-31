@@ -42,5 +42,10 @@ namespace Data.Provider
             }
             catch { return []; }
         }
+
+        public Location GetLocationById(int id)
+        {
+            return _context.Locations.Where(s => s.Id == id).First();
+        }
     }
 }

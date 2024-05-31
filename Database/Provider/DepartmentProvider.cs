@@ -28,5 +28,10 @@ namespace Data.Provider
         {
             return _context.Departments.Where(s => s.Name == name).First();
         }
+
+        public Department GetDepartmentById(int id)
+        {
+            return _context.Departments.Where(s => s.Id == id).First();
+        }
     }
 }
