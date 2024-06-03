@@ -6,6 +6,7 @@ using Domain.DTO;
 using Data.Interfaces;
 using Data.Exceptions;
 using Domain.Interfaces;
+using Data.Models;
 
 //
 namespace Domain.Providers
@@ -146,23 +147,30 @@ namespace Domain.Providers
                 Id = id,
                 FirstName = emp.FirstName,
                 LastName = emp.LastName,
-                DateOfBirth = emp.DateOfBirth != null ? DateOnly.ParseExact(emp.DateOfBirth, "dd/MM/yyyy", CultureInfo.InvariantCulture) : null,
+                DateOfBirth = emp.DateOfBirth != null && emp.DateOfBirth!=string.Empty ? DateOnly.ParseExact(emp.DateOfBirth, "dd/MM/yyyy", CultureInfo.InvariantCulture) : null,
+
                 ManagerId = managerId,
-                MobileNumber = emp.MobileNumber != null ? long.Parse(emp.MobileNumber) : null,
+                MobileNumber = emp.MobileNumber != null && emp.MobileNumber != string.Empty ? long.Parse(emp.MobileNumber) : null,
                 RoleId = _roleDataProvider.GetRoleByName(emp.JobTitle).Id,
                 JoiningDate = DateOnly.ParseExact(emp.JoiningDate, "dd/MM/yyyy", CultureInfo.InvariantCulture),
                 Department = _departmentProvider.GetDepartmentByName(emp.Department),
                 Email = emp.Email,
                 Location = _locationProvider.GetLocationByName(emp.Location),
-                Project = _projectProvider.GetProjectByName(emp.Project),
-                ProjectId= _projectProvider.GetProjectByName(emp.Project)!=null? _projectProvider.GetProjectByName(emp.Project)!.Id:null,
                 DepartmentId= _departmentProvider.GetDepartmentByName(emp.Department).Id,
                 LocationId= _locationProvider.GetLocationByName(emp.Location).Id,
                 Role= _roleDataProvider.GetRoleByName(emp.JobTitle),
                 Manager = emp.Manager != null ? _employeeDataProvider.GetEmployee(emp.Manager) != null ? _employeeDataProvider.GetEmployee(emp.Manager)!: null : null,
                 InverseManager=_employeeDataProvider.GetEmployesUnderManager(managerId)!=null? _employeeDataProvider.GetEmployesUnderManager(managerId)!.ToList():null!,
-
             };
+            employee.Project = _projectProvider.GetProjectByName(emp.Project);
+            if(employee.Project != null)
+            {
+                employee.ProjectId= employee.Project.Id;
+            }
+            else
+            {
+                employee.ProjectId = null;
+            }
             _employeeDataProvider.Add(employee);
 
         }

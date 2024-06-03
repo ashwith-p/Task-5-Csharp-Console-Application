@@ -83,7 +83,6 @@ namespace Domain.Providers
             int roleId = new Random().Next(100, 999);
             Data.Models.Role role = new()
             {
-                Id = roleId,
                 Name = Role.Name,
                 Description = Role.Description,
                 DepartmentId = _departmentProvider.GetDepartmentByName(Role.Department).Id,
@@ -94,7 +93,7 @@ namespace Domain.Providers
             Data.Models.RoleDetail roleDetail = new() { 
                 RoleId = role.Id, 
                 LocationId = _locationProvider.GetLocationByName(Role.Location[0]).Id
-                ,Role=_roleDataProvider.GetRoleById(roleId),
+                ,Role=_roleDataProvider.GetRoleById(role.Id),
                 Location= _locationProvider.GetLocationByName(Role.Location[0]) };
             
             _roleDetailProvider.Add(roleDetail);

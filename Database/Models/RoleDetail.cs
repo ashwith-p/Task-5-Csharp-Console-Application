@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Data.Models;
 
@@ -9,7 +11,9 @@ public partial class RoleDetail
 
     public int? LocationId { get; set; }
 
+    [ForeignKey(nameof(LocationId))]
     public virtual Location? Location { get; set; }
 
+    [ForeignKey(nameof(RoleId))]
     public virtual Role? Role { get; set; }
 }

@@ -9,13 +9,15 @@ using EmployeeDirectory.Interfaces;
 
 namespace EmployeeDirectory
 {
-    public class MainMenu(IEmployeeProvider employeeProvider, IRoleProvider roleProvider)
+    public class MainMenu(IEmployeeProvider employeeProvider, IRoleProvider roleProvider,AshwithEmployeeDirectoryContext context)
     {
         private readonly IEmployeeProvider _employeeProvider = employeeProvider;
         private readonly IRoleProvider _roleProvider = roleProvider;
+        private readonly AshwithEmployeeDirectoryContext _context= context;
 
         public void Init()
         {
+            
             ConsoleHelpers.ConsoleOutput("1.Employee Management");
             ConsoleHelpers.ConsoleOutput("2.Roles Management");
             ConsoleHelpers.ConsoleOutput("3.Exit");

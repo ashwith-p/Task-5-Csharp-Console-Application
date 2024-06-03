@@ -1,16 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Data.Models;
 
 public partial class Employee
 {
+    [Key,MaxLength(6)]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public string Id { get; set; } = null!;
 
+    [MaxLength(35)]
     public string FirstName { get; set; } = null!;
 
+    [MaxLength(35)]
     public string LastName { get; set; } = null!;
 
+    [MaxLength(320)]
     public string Email { get; set; } = null!;
 
     public long? MobileNumber { get; set; }
@@ -25,19 +32,25 @@ public partial class Employee
 
     public int LocationId { get; set; }
 
+    [MaxLength(6)]
     public string? ManagerId { get; set; }
 
     public int? ProjectId { get; set; }
 
+    [ForeignKey(nameof(DepartmentId))]
     public virtual Department Department { get; set; } = null!;
 
     public virtual ICollection<Employee> InverseManager { get; set; } = new List<Employee>();
 
+    [ForeignKey(nameof(LocationId))]
     public virtual Location Location { get; set; } = null!;
 
+    [ForeignKey(nameof(ManagerId))]
     public virtual Employee? Manager { get; set; }
 
+    [ForeignKey(nameof(ProjectId))]
     public virtual Project? Project { get; set; }
 
+    [ForeignKey(nameof(RoleId))]
     public virtual Role Role { get; set; } = null!;
 }

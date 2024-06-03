@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 namespace Data.Provider
 {
@@ -119,7 +120,14 @@ namespace Data.Provider
                     propertyInfo!.SetValue(emp, value.Substring(0, 6));
                     Console.WriteLine(value.Substring(0,6).Length);
                 }
-                propertyInfo!.SetValue(emp, value);
+                else if(pair[choice] == nameof(Employee.DateOfBirth) || pair[choice]== nameof(Employee.JoiningDate))
+                {
+                    propertyInfo!.SetValue(emp, DateOnly.ParseExact(value, "dd/MM/yyyy", CultureInfo.InvariantCulture));
+                }
+                else
+                {
+                    propertyInfo!.SetValue(emp, value);
+                }
             }
             else
             {
