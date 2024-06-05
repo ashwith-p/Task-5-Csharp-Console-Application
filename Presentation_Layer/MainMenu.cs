@@ -1,10 +1,5 @@
-﻿using EmployeeDirectory.Providers;
+﻿
 using EmployeeDirectory.Utilities.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using EmployeeDirectory.Interfaces;
 
 namespace EmployeeDirectory

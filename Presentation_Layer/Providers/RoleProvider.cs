@@ -1,7 +1,5 @@
 ﻿using EmployeeDirectory.Utilities.Helpers;
-using Domain.DTO;
 using System.Reflection;
-using Domain.Providers;
 using EmployeeDirectory.Interfaces;
 
 namespace EmployeeDirectory.Providers

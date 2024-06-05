@@ -3,7 +3,7 @@ using Data.Interfaces;
 using System.Reflection;
 using Domain.Interfaces;
 
-using DataEmployee = Data.Models.Employee;
+using DataRole = Data.Models.Role;
 
 namespace Domain.Providers
 {
@@ -60,13 +60,13 @@ namespace Domain.Providers
             return _departmentProvider.GetDepartment(id)!.Name;
         }
 
-        public List<DTO.Role> GetRoleData()
+        public List<Role> GetRoleData()
         {
-            List<DTO.Role> roleDTOs = [];
-            List<Data.Models.Role> roles=_roleDataProvider.GetRoles().ToList();
+            List<Role> roleDTOs = [];
+            List<DataRole> roles=_roleDataProvider.GetRoles().ToList();
             foreach (Data.Models.Role role in roles)
             {
-                DTO.Role roleDTO = new()
+                Role roleDTO = new()
                 {
                     Name = role.Name,
                     Description = role.Description,
@@ -78,10 +78,10 @@ namespace Domain.Providers
             return roleDTOs;
         }
 
-        public void AddRole(DTO.Role Role)
+        public void AddRole(Role Role)
         {
             int roleId = new Random().Next(100, 999);
-            Data.Models.Role role = new()
+            DataRole role = new()
             {
                 Name = Role.Name,
                 Description = Role.Description,

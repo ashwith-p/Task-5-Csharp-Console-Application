@@ -1,7 +1,5 @@
 ﻿
-using Microsoft.EntityFrameworkCore.Storage;
-using Data;
-using Data.Models;
+
 using Data.Interfaces;
 namespace Domain.DTO
 {

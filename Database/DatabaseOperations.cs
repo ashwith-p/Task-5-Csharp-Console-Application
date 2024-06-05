@@ -1,8 +1,6 @@
-﻿using System.Text.Json;
+﻿
 using Data.Models;
 using Data.Interfaces;
-using Data.Exceptions;
-using System.Data.SqlClient;
 using System.Data;
 using EmployeeDirectory;
 

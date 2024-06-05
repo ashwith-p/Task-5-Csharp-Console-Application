@@ -1,6 +1,4 @@
-﻿using Domain.DTO;
-using Data.Models;
-
+﻿
 namespace Domain.Interfaces
 {
     public interface IEmployeeProvider
