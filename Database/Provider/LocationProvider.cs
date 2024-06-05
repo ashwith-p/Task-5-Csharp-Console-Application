@@ -20,25 +20,29 @@ namespace Data.Provider
         {
             return _context.Locations.Where(s => s.Id == id).FirstOrDefault();
         }
-        public IEnumerable<Location> GetLocations()
-        {
-            return _context.Locations;
-        }
-        public Location GetLocationByName(string name)
-        {
-            return _context.Locations.Where(s => s.Name == name).First();
-        }
 
-        public IEnumerable<string> GetLocationsByRole(string role)
+        public IEnumerable<string> GetLocationsByRole(int role)
         {
             try
             {
-                int id = _context.Roles.Where(s => s.Name == role).Select(s => s.Id).FirstOrDefault();
                 return (from location in _context.Locations
                         join roleDetail in _context.RoleDetails on location.Id equals roleDetail.LocationId
                         join roles in _context.Roles on roleDetail.RoleId equals roles.Id
-                        where roles.Id.Equals(id)
+                        where roles.Id.Equals(role)
                         select location.Name);
+            }
+            catch { return []; }
+        }
+
+        public IEnumerable<int> GetLocationIdsByRole(int role)
+        {
+            try
+            {
+                return (from location in _context.Locations
+                        join roleDetail in _context.RoleDetails on location.Id equals roleDetail.LocationId
+                        join roles in _context.Roles on roleDetail.RoleId equals roles.Id
+                        where roles.Id.Equals(role)
+                        select location.Id);
             }
             catch { return []; }
         }

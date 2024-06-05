@@ -10,11 +10,5 @@ namespace Data.Interfaces
     public interface IDepartmentProvider
     {
         public Department? GetDepartment(int id);
-
-        public IEnumerable<Department> GetDepartments();
-
-        public Department GetDepartmentByName(string name);
-
-        public Department GetDepartmentById(int id);
     }
 }

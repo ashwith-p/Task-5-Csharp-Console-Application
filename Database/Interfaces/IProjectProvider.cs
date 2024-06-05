@@ -10,9 +10,5 @@ namespace Data.Interfaces
     public interface IProjectProvider
     {
         public Project? GetProject(int? id);
-
-        public IEnumerable<Project> GetProjects();
-
-        public Project? GetProjectByName(string? name);
     }
 }

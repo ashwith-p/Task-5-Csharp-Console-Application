@@ -19,10 +19,6 @@ namespace Data.Provider
         {
             return _context.Roles;
         }
-        public Role GetRoleByName(string name)
-        {
-            return _context.Roles.Where(s=>s.Name==name).First();
-        }
 
         public IEnumerable<Employee> GetEmployeesByRole(int id)
         {
@@ -31,7 +27,14 @@ namespace Data.Provider
 
         public Role GetRoleById(int id)
         {
-            return _context.Roles.Where(s=>s.Id==id).First();
+            try
+            {
+                return _context.Roles.Where(s => s.Id == id).First();
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         public void Add(Role role)
@@ -40,9 +43,9 @@ namespace Data.Provider
             _context.SaveChanges();
         }
 
-        public IEnumerable<string> GetRoleNamesByDepartment(string department)
+        public IEnumerable<string> GetRoleNamesByDepartment(int department)
         {
-            return _context.Roles.Where(s=>s.DepartmentId==(_context.Departments.Where(d=>d.Name==department).Select(d=>d.Id).First())).Select(s=>s.Name);
+            return _context.Roles.Where(s=>s.DepartmentId==department).Select(s=>s.Name);
         }
     }
 }

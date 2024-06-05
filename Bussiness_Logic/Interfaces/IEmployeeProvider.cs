@@ -5,7 +5,7 @@ namespace Domain.Interfaces
 {
     public interface IEmployeeProvider
     {
-        public List<string> GetStaticData(string name, string? value = null);
+        public List<string> GetStaticData(string name, int? value = null);
 
         public bool IsValidName(string name);
 
@@ -22,6 +22,8 @@ namespace Domain.Interfaces
         public List<DTO.Employee>? GetEmployeesInformation();
 
         public DTO.Employee? GetEmployee(string email);
+
+        public string? GetValueById(int? id, string name);
 
         public void EditEmployee(Dictionary<int, string> pair, int choice, string value, string email);
 

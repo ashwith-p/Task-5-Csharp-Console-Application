@@ -20,18 +20,5 @@ namespace Data.Provider
         {
             return _context.Departments.Where(s=>s.Id == id).FirstOrDefault();
         }
-        public IEnumerable<Department> GetDepartments()
-        {
-            return _context.Departments;
-        }
-        public Department GetDepartmentByName(string name)
-        {
-            return _context.Departments.Where(s => s.Name == name).First();
-        }
-
-        public Department GetDepartmentById(int id)
-        {
-            return _context.Departments.Where(s => s.Id == id).First();
-        }
     }
 }

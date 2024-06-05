@@ -4,10 +4,10 @@
     {
         public string Name { get; set; } = string.Empty;        
 
-        public string Department { get; set; } = string.Empty;
+        public int Department { get; set; }
 
         public string? Description { get; set; }
 
-        public List<string> Location { get; set; } = [];        
+        public List<int> Location { get; set; } = [];        
     }
 }

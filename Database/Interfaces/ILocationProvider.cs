@@ -11,12 +11,12 @@ namespace Data.Interfaces
     {
         public Location? GetLocation(int id);
 
-        public IEnumerable<Location> GetLocations();
-
-        public Location GetLocationByName(string name);
-
-        public IEnumerable<string> GetLocationsByRole(string role);
+        public IEnumerable<string> GetLocationsByRole(int role);
 
         public Location GetLocationById(int id);
+
+        public IEnumerable<int> GetLocationIdsByRole(int role);
     }
+
+
 }

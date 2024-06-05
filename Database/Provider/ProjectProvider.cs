@@ -21,20 +21,6 @@ namespace Data.Provider
             if (id == null) return null;
             return _context.Projects.Where(s => s.Id == id).FirstOrDefault();
         }
-        public IEnumerable<Project> GetProjects()
-        {
-            return _context.Projects;
-        }
-        public Project? GetProjectByName(string? name)
-        {
-            try
-            {
-                return _context.Projects.Where(s => s.Name == name).FirstOrDefault();
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
+        
     }
 }

@@ -2,22 +2,17 @@
 using Domain.DTO;
 using EmployeeDirectory.Utilities.Helpers;
 using EmployeeDirectory.Interfaces;
-using Domain.Providers;
 using Data.Exceptions;
 using Data;
 
 
 namespace EmployeeDirectory.Providers
 {
-    public class EmployeeProvider : IEmployeeProvider
+    public class EmployeeProvider(Domain.Interfaces.IEmployeeProvider provider) : IEmployeeProvider
     {
 
-        private readonly Domain.Interfaces.IEmployeeProvider _provider;
+        private readonly Domain.Interfaces.IEmployeeProvider _provider = provider;
         private readonly ErrorMessages _errorMessages = new();
-        public EmployeeProvider(Domain.Interfaces.IEmployeeProvider provider)
-        {
-            _provider = provider;
-        }
 
         public void EmployeeDisplayOperations()
         {
@@ -75,6 +70,7 @@ namespace EmployeeDirectory.Providers
             }
             ConsoleHelpers.ConsoleOutput("Do you want to continue(Y/N)");
             var select = Console.ReadLine();
+            
             if (select?.ToLower() == "n")
             {
                 return;
@@ -93,22 +89,23 @@ namespace EmployeeDirectory.Providers
                 PropertyInfo property = type.GetProperty(prop.Name)!;
                 if (prop.Name == nameof(Employee.Department) || prop.Name == nameof(Employee.Project))
                 {
-                    property.SetValue(employee, GetStaticValues(prop.Name));
+                    string? id = GetStaticValues(prop.Name);
+                    property.SetValue(employee, id==null?null:int.Parse(id));
                 }
                 else if (prop.Name == nameof(Employee.JobTitle))
                 {
-                    string? value = employee.GetType().GetProperty(nameof(employee.Department))!.GetValue(employee)!.ToString();
-                    property.SetValue(employee, GetStaticValues(prop.Name, string.Empty, value));
+                    int? value = (int)employee.GetType().GetProperty(nameof(employee.Department))!.GetValue(employee)!;
+                    property.SetValue(employee,int.Parse( GetStaticValues(prop.Name, string.Empty,value)!));
                 }
                 else if (prop.Name == nameof(Employee.Location))
                 {
-                    string? value = employee.GetType().GetProperty(nameof(employee.JobTitle))!.GetValue(employee)!.ToString();
-                    property.SetValue(employee, GetStaticValues(prop.Name, string.Empty, value));
+                    int? value =(int) employee.GetType().GetProperty(nameof(employee.JobTitle))!.GetValue(employee)!;
+                    property.SetValue(employee, int.Parse(GetStaticValues(prop.Name, string.Empty,value)!));
                 }
                 else if (prop.Name == nameof(Employee.Manager))
                 {
-                    string? managerId = GetStaticValues(prop.Name, string.Empty, "Employee");
-                    property.SetValue(employee, managerId != null ? managerId!.Substring(0, 7) : null);
+                    string? managerId = GetStaticValues(prop.Name, string.Empty, 0);
+                    property.SetValue(employee, managerId != null ? managerId![..6] : null);
                 }
                 else
                 {
@@ -125,21 +122,23 @@ namespace EmployeeDirectory.Providers
                     PropertyInfo property = type.GetProperty(inCorrect[i])!;
                     if (inCorrect[i] == nameof(Employee.Department) || inCorrect[i] == nameof(Employee.Project))
                     {
-                        property.SetValue(employee, GetStaticValues(inCorrect[i]));
+                        string? id = GetStaticValues(inCorrect[i]);
+                        property.SetValue(employee, id == null ? null : int.Parse(id));
                     }
                     else if (inCorrect[i] == nameof(Employee.JobTitle))
                     {
-                        string? value = employee.GetType().GetProperty(nameof(employee.Department))!.GetValue(employee)!.ToString();
-                        property.SetValue(employee, GetStaticValues(inCorrect[i], string.Empty, value));
+                        int? value = (int)employee.GetType().GetProperty(nameof(employee.Department))!.GetValue(employee)!;
+                        property.SetValue(employee, int.Parse(GetStaticValues(inCorrect[i], string.Empty,value)!));
                     }
                     else if (inCorrect[i] == nameof(Employee.Location))
                     {
-                        string? value = employee.GetType().GetProperty(nameof(employee.JobTitle))!.GetValue(employee)!.ToString();
-                        property.SetValue(employee, GetStaticValues(inCorrect[i], string.Empty, value));
+                        int? value = (int)employee.GetType().GetProperty(nameof(employee.JobTitle))!.GetValue(employee)!;
+                        property.SetValue(employee, int.Parse(GetStaticValues(inCorrect[i], string.Empty,value)!));
                     }
                     else if (inCorrect[i] == nameof(Employee.Manager))
                     {
-                        property.SetValue(employee, GetStaticValues(inCorrect[i], string.Empty, "Employee"));
+                        string? managerId = GetStaticValues(inCorrect[i], string.Empty, 0);
+                        property.SetValue(employee, managerId != null ? managerId![..6] : null);
                     }
                     else
                     {
@@ -189,7 +188,7 @@ namespace EmployeeDirectory.Providers
         /// <param name="choice"></param>
         /// <param name="message"></param>
         /// <returns>Static data for projects and departments.</returns>
-        public string? GetStaticValues(string choice, string message = "", string? staticValue = null)
+        public string? GetStaticValues(string choice, string message = "", int? staticValue = null)
         {
             List<string> staticData;
             staticData = _provider.GetStaticData(choice, staticValue);
@@ -208,7 +207,9 @@ namespace EmployeeDirectory.Providers
             {
                 if (x > 0 && x <= staticData.Count)
                 {
-                    value = staticData[int.Parse(input) - 1];
+                    if (choice == nameof(Employee.Manager))
+                        return staticData[x-1];
+                    value = input;
                 }
 
             }
@@ -222,13 +223,9 @@ namespace EmployeeDirectory.Providers
                 List<Employee> employees = _provider.GetEmployeesInformation() ?? [];
                 foreach (Employee employee in employees)
                 {
-                    Type type = typeof(Employee);
-                    foreach (PropertyInfo prop in type.GetProperties())
-                    {
-                        ConsoleHelpers.ConsoleOutput($"{prop.Name} : {prop.GetValue(employee)}");
-                    }
-                    ConsoleHelpers.ConsoleOutput("----------------------------------------------");
-                    ConsoleHelpers.ConsoleOutput("----------------------------------------------");
+                    this.PrintEmployee(employee);
+                    ConsoleHelpers.ConsoleOutput("--------------------------");
+                    ConsoleHelpers.ConsoleOutput("--------------------------");
                 }
 
             }
@@ -238,6 +235,21 @@ namespace EmployeeDirectory.Providers
             }
         }
 
+        private void PrintEmployee(Employee employee)
+        {
+            ConsoleHelpers.ConsoleOutput("FirstName:" + employee.FirstName);
+            ConsoleHelpers.ConsoleOutput("LastName:" + employee.LastName);
+            ConsoleHelpers.ConsoleOutput("DateOfBirth:" + employee.DateOfBirth);
+            ConsoleHelpers.ConsoleOutput("Email ID:" + employee.Email);
+            ConsoleHelpers.ConsoleOutput($"Phone Number:{employee.MobileNumber}");
+            ConsoleHelpers.ConsoleOutput($"Joining Date:{employee.JoiningDate}");
+            ConsoleHelpers.ConsoleOutput($"Department:{_provider.GetValueById(employee.Department,nameof(employee.Department))}");
+            ConsoleHelpers.ConsoleOutput($"Location:{_provider.GetValueById(employee.Location,nameof(employee.Location))}");
+            ConsoleHelpers.ConsoleOutput($"Job Title:{_provider.GetValueById(employee.JobTitle,nameof(employee.JobTitle))}");
+            ConsoleHelpers.ConsoleOutput($"Manager:{employee.Manager}");
+            ConsoleHelpers.ConsoleOutput($"Project:{_provider.GetValueById(employee.Project,nameof(employee.Project))}");
+        }
+
         public void GetEmployeeById()
         {
             ConsoleHelpers.ConsoleOutput("Enter the Employee ID:", false);
@@ -245,12 +257,7 @@ namespace EmployeeDirectory.Providers
             try
             {
                 Employee employee = _provider.GetEmployee(id) ?? throw new EmployeeIdNotFoundException();
-                Type type = typeof(Employee);
-                foreach (PropertyInfo prop in type.GetProperties())
-                {
-                    ConsoleHelpers.ConsoleOutput($"{prop.Name} : {prop.GetValue(employee)}");
-                }
-                ConsoleHelpers.ConsoleOutput("----------------------------------------------");
+                this.PrintEmployee(employee);
             }
             catch (EmployeeIdNotFoundException)
             {
@@ -280,7 +287,7 @@ namespace EmployeeDirectory.Providers
                     ConsoleHelpers.ConsoleOutput("Enter the choice:", false);
                     bool isValidInput = false;
                     int choice = ConsoleHelpers.ConsoleIntegerInput();
-                    if (choice > 0 && choice < 12)
+                    if (choice > 0 && choice <= pair.Count)
                     {
                         string data = string.Empty;
                         if (pair[choice] == nameof(Employee.Department))
@@ -290,17 +297,17 @@ namespace EmployeeDirectory.Providers
                         }
                         else if (pair[choice] == nameof(Employee.JobTitle))
                         {
-                            string? value = employee.GetType().GetProperty(nameof(employee.Department))!.GetValue(employee)!.ToString();
+                            int? value = (int)employee.GetType().GetProperty(nameof(employee.Department))!.GetValue(employee)!;
                             data = GetStaticValues(pair[choice], "Enter the value of" + pair[choice] + ':', value)!;
                         }
                         else if (pair[choice] == nameof(Employee.Location))
                         {
-                            string? value = employee.GetType().GetProperty(nameof(employee.JobTitle))!.GetValue(employee)!.ToString();
+                            int? value =(int) employee.GetType().GetProperty(nameof(employee.JobTitle))!.GetValue(employee)!;
                             data = GetStaticValues(pair[choice], "Enter the value of" + pair[choice] + ':', value)!;
                         }
                         else if (pair[choice] == nameof(Employee.Manager))
                         {
-                            data = GetStaticValues(pair[choice], "Enter the value of" + pair[choice] + ':', "Employee")!;
+                            data = GetStaticValues(pair[choice], "Enter the value of" + pair[choice] + ':', 0)!;
                         }
                         else if (pair[choice] == nameof(Employee.Project))
                         {

@@ -1,28 +1,20 @@
 ﻿using Domain.DTO;
 using Data.Interfaces;
-using Data.Models;
 using System.Reflection;
 using Domain.Interfaces;
 
+using DataEmployee = Data.Models.Employee;
+
 namespace Domain.Providers
 {
-    public class RoleProviders : IRoleProvider
+    public class RoleProviders(IEmployeeProvider employeeObj, IRoleDataProvider roleDataProvider,
+        ILocationProvider locationProvider, IDepartmentProvider departmentProvider, IRoleDetailProvider roleDetailProvider) : IRoleProvider
     {
-        private readonly IRoleDataProvider _roleDataProvider;
-        private readonly IEmployeeProvider _employeeObj;
-        private readonly ILocationProvider _locationProvider;
-        private readonly IDepartmentProvider _departmentProvider;
-        private readonly IRoleDetailProvider _roleDetailProvider;
-
-        public RoleProviders(IEmployeeProvider employeeObj,IRoleDataProvider roleDataProvider,
-            ILocationProvider locationProvider,IDepartmentProvider departmentProvider,IRoleDetailProvider roleDetailProvider)
-        {
-            _employeeObj = employeeObj;
-            _roleDataProvider = roleDataProvider;
-            _locationProvider = locationProvider;
-            _departmentProvider = departmentProvider;
-            _roleDetailProvider = roleDetailProvider;
-        }
+        private readonly IRoleDataProvider _roleDataProvider = roleDataProvider;
+        private readonly IEmployeeProvider _employeeObj = employeeObj;
+        private readonly ILocationProvider _locationProvider = locationProvider;
+        private readonly IDepartmentProvider _departmentProvider = departmentProvider;
+        private readonly IRoleDetailProvider _roleDetailProvider = roleDetailProvider;
 
         public bool IsValidRole(string value, string key)
         {
@@ -58,6 +50,16 @@ namespace Domain.Providers
             return errorList;
         }
 
+        public string GetLocationById(int id)
+        {
+            return _locationProvider.GetLocationById(id).Name;
+        }
+
+        public string GetDepartmentById(int id)
+        {
+            return _departmentProvider.GetDepartment(id)!.Name;
+        }
+
         public List<DTO.Role> GetRoleData()
         {
             List<DTO.Role> roleDTOs = [];
@@ -68,15 +70,13 @@ namespace Domain.Providers
                 {
                     Name = role.Name,
                     Description = role.Description,
-                    Location = _locationProvider.GetLocationsByRole(role.Name).ToList(),
-                    Department = _departmentProvider.GetDepartment(role.DepartmentId)!.Name,
+                    Location = _locationProvider.GetLocationIdsByRole(role.Id).ToList(),
+                    Department =role.DepartmentId,
                 };
                 roleDTOs.Add(roleDTO);
             }
             return roleDTOs;
         }
-
-
 
         public void AddRole(DTO.Role Role)
         {
@@ -85,16 +85,16 @@ namespace Domain.Providers
             {
                 Name = Role.Name,
                 Description = Role.Description,
-                DepartmentId = _departmentProvider.GetDepartmentByName(Role.Department).Id,
-                Department = _departmentProvider.GetDepartmentByName(Role.Department),
+                DepartmentId = Role.Department,
+                Department = _departmentProvider.GetDepartment(Role.Department)!,
                 Employees = _roleDataProvider.GetEmployeesByRole(roleId).ToList(),
             };
             _roleDataProvider.Add(role);
             Data.Models.RoleDetail roleDetail = new() { 
                 RoleId = role.Id, 
-                LocationId = _locationProvider.GetLocationByName(Role.Location[0]).Id
+                LocationId = Role.Location[0]
                 ,Role=_roleDataProvider.GetRoleById(role.Id),
-                Location= _locationProvider.GetLocationByName(Role.Location[0]) };
+                Location= _locationProvider.GetLocationById(Role.Location[0]) };
             
             _roleDetailProvider.Add(roleDetail);
         }

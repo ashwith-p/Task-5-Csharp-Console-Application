@@ -11,14 +11,12 @@ namespace Data.Interfaces
     {
         public IEnumerable<Role> GetRoles();
 
-        public Role GetRoleByName(string name);
-
         public IEnumerable<Employee> GetEmployeesByRole(int id);
 
         public Role GetRoleById(int id);
 
         public void Add(Role role);
 
-        public IEnumerable<string> GetRoleNamesByDepartment(string department);
+        public IEnumerable<string> GetRoleNamesByDepartment(int department);
     }
 }

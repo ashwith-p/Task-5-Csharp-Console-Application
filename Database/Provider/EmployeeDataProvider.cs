@@ -2,34 +2,20 @@
 using Data.Models;
 using EmployeeDirectory;
 using Data.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 
 namespace Data.Provider
 {
-    public class EmployeeDataProvider:IEmployeeDataProvider
+    public class EmployeeDataProvider(AshwithEmployeeDirectoryContext context, IRoleDataProvider roleDataProvider, ILocationProvider locationProvider
+            , IProjectProvider projectProvider) : IEmployeeDataProvider
     {
-        private readonly AshwithEmployeeDirectoryContext _context;
-        private readonly IRoleDataProvider _roleDataProvider;
-        private readonly IProjectProvider _projectProvider;
-        private readonly IDepartmentProvider _departmentProvider;
-        private readonly ILocationProvider _locationProvider;
-        public EmployeeDataProvider(AshwithEmployeeDirectoryContext context,IRoleDataProvider roleDataProvider,ILocationProvider locationProvider
-            ,IDepartmentProvider departmentProvider,IProjectProvider projectProvider)
-        {
-            _context = context;
-            _roleDataProvider = roleDataProvider;
-            _locationProvider = locationProvider;
-            _projectProvider = projectProvider;
-            _departmentProvider = departmentProvider;
-        }
+        private readonly AshwithEmployeeDirectoryContext _context = context;
+        private readonly IRoleDataProvider _roleDataProvider = roleDataProvider;
+        private readonly IProjectProvider _projectProvider = projectProvider;
+        private readonly ILocationProvider _locationProvider = locationProvider;
+
         public Employee? GetEmployee(string id)
         {
             return _context.Employees.Where(s => s.Id == id).FirstOrDefault();
@@ -93,20 +79,18 @@ namespace Data.Provider
             }
             else if (pair[choice]=="JobTitle")
             {
+                id = int.Parse(value);
                 pair[choice]=nameof(Employee.RoleId);
-            }
-            if (pair[choice] == nameof(Employee.RoleId))
-            {
-                id = _roleDataProvider.GetRoleByName(value).Id;
             }
             else if (pair[choice] == nameof(Employee.Project))
             {
-                id = _projectProvider.GetProjectByName(value) != null ? _projectProvider.GetProjectByName(value)!.Id : null;
+                id = int.Parse(value);
                 pair[choice] = nameof(Employee.ProjectId);
             }
-            else if (pair[choice] == nameof(Employee.Location))
+            else if (pair[choice]==nameof(Employee.Location))
             {
-                id = _locationProvider.GetLocationByName(value).Id;
+                id = int.Parse(value);
+                pair[choice]=nameof(Employee.LocationId);
             }
             else
             {
@@ -117,8 +101,7 @@ namespace Data.Provider
             {
                 if (pair[choice] == nameof(Employee.ManagerId))
                 {
-                    propertyInfo!.SetValue(emp, value.Substring(0, 6));
-                    Console.WriteLine(value.Substring(0,6).Length);
+                    propertyInfo!.SetValue(emp, value[..6]);
                 }
                 else if(pair[choice] == nameof(Employee.DateOfBirth) || pair[choice]== nameof(Employee.JoiningDate))
                 {

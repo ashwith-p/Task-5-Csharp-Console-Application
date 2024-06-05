@@ -16,11 +16,6 @@ namespace Data.Provider
         {
             _context = context;
         }
-        
-        public IEnumerable<RoleDetail> GetRoleDetails()
-        {
-            return _context.RoleDetails;
-        }
 
         public void Add(RoleDetail roleDetail)
         {

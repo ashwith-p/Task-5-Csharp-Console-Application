@@ -19,15 +19,15 @@ namespace Domain.DTO
 
         public string JoiningDate { get; set; } = string.Empty;
 
-        public string Department { get; set; } = string.Empty;
+        public int  Department { get; set; } 
 
-        public string JobTitle { get; set; } = string.Empty;
+        public int JobTitle { get; set; }
 
-        public string Location { get; set; } = string.Empty;
+        public int Location { get; set; } 
 
         public string? Manager { get; set; } 
 
-        public string? Project { get; set; }
+        public int? Project { get; set; }
 
         public Employee()
         {}
@@ -37,14 +37,14 @@ namespace Domain.DTO
             
             this.FirstName = emp.FirstName;
             this.LastName = emp.LastName;
-            this.DateOfBirth = emp.DateOfBirth==null?null:emp.DateOfBirth.ToString();
+            this.DateOfBirth = emp.DateOfBirth?.ToString();
             this.Email = emp.Email;
-            this.MobileNumber = emp.MobileNumber==null?null:emp.MobileNumber.ToString();
-            this.Project = emp.ProjectId!=null?projectProvider.GetProject(emp.ProjectId)!.Name:null;
-            this.Department = departmentProvider.GetDepartment(emp.DepartmentId)!.Name;
+            this.MobileNumber = emp.MobileNumber?.ToString();
+            this.Project = emp.ProjectId!=null?projectProvider.GetProject(emp.ProjectId)!.Id:null;
+            this.Department = departmentProvider.GetDepartment(emp.DepartmentId)!.Id;
             this.Manager = emp.Manager!=null?emp.Manager.FirstName+' '+emp.Manager.LastName:null;
-            this.Location = locationProvider.GetLocationById(emp.LocationId).Name;
-            this.JobTitle = roleDataProvider.GetRoleById(emp.RoleId).Name;
+            this.Location = locationProvider.GetLocationById(emp.LocationId).Id;
+            this.JobTitle = roleDataProvider.GetRoleById(emp.RoleId).Id;
             this.JoiningDate = emp.JoiningDate.ToString();
         }
     }

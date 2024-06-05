@@ -10,6 +10,10 @@ namespace Domain.Interfaces
 
         public List<Role> GetRoleData();
 
+        public string GetLocationById(int id);
+
+        public string GetDepartmentById(int id);
+
         public void AddRole(Role Role);
 
     }

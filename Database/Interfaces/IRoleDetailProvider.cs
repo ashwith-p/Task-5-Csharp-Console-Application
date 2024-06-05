@@ -9,8 +9,6 @@ namespace Data.Interfaces
 {
     public interface IRoleDetailProvider
     {
-        public IEnumerable<RoleDetail> GetRoleDetails();
-
         public void Add(RoleDetail roleDetail);
     }
 }

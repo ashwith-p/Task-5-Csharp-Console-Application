@@ -1,49 +1,37 @@
-﻿using System.Text.Json;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using System.Globalization;
 using System.Reflection;
 using Domain.DTO;
 using Data.Interfaces;
 using Data.Exceptions;
 using Domain.Interfaces;
-using Data.Models;
+using DataEmployee = Data.Models.Employee;
 
 //
 namespace Domain.Providers
 {
-    public class EmployeeProviders : IEmployeeProvider
+    public class EmployeeProviders(IDatabaseOperations databaseObj, IEmployeeDataProvider employeeDataProvider, IRoleDataProvider roleDataProvider, IDepartmentProvider departmentProvider
+            , ILocationProvider locationProvider, IProjectProvider projectProvider) : IEmployeeProvider
     {
 
-        private readonly IDatabaseOperations _databaseObj;
-        private readonly IEmployeeDataProvider _employeeDataProvider;
-        private readonly IRoleDataProvider _roleDataProvider;
-        private readonly IProjectProvider _projectProvider;
-        private readonly ILocationProvider _locationProvider;
-        private readonly IDepartmentProvider _departmentProvider;
+        private readonly IDatabaseOperations _databaseObj = databaseObj;
+        private readonly IEmployeeDataProvider _employeeDataProvider = employeeDataProvider;
+        private readonly IRoleDataProvider _roleDataProvider = roleDataProvider;
+        private readonly IProjectProvider _projectProvider = projectProvider;
+        private readonly ILocationProvider _locationProvider = locationProvider;
+        private readonly IDepartmentProvider _departmentProvider = departmentProvider;
 
-        public EmployeeProviders(IDatabaseOperations databaseObj,IEmployeeDataProvider employeeDataProvider,IRoleDataProvider roleDataProvider,IDepartmentProvider departmentProvider
-            ,ILocationProvider locationProvider,IProjectProvider projectProvider)
-        {
-            _databaseObj = databaseObj;
-            _employeeDataProvider = employeeDataProvider;
-            _roleDataProvider = roleDataProvider;
-            _projectProvider = projectProvider;
-            _locationProvider = locationProvider;
-            _departmentProvider = departmentProvider;
-
-        }
-
-        public List<string> GetStaticData(string name, string? value = null)
+        public List<string> GetStaticData(string name, int? value = null)
         {
             if (value != null)
             {
                 if (name == nameof(DTO.Employee.JobTitle))
                 {
-                    return _roleDataProvider.GetRoleNamesByDepartment(value).ToList();
+                    return _roleDataProvider.GetRoleNamesByDepartment((int)value).ToList();
                 }
                 else if (name == nameof(DTO.Employee.Location))
                 {
-                    return _locationProvider.GetLocationsByRole(value).ToList();
+                    return _locationProvider.GetLocationsByRole((int)value).ToList();
                 }
                 else
                 {
@@ -113,12 +101,12 @@ namespace Domain.Providers
                 case nameof(DTO.Employee.Location):
                 case nameof(DTO.Employee.JobTitle):
                 case nameof(DTO.Employee.Department):
-                    return IsValidName(data);
+                    return data.Length!=0;
                 case nameof(DTO.Employee.Manager):
                 case nameof(DTO.Employee.Project):
                     if (string.IsNullOrEmpty(data))
                         return true;
-                    return IsValidName(data);
+                    return data.Length!=0;
 
             }
             return false;
@@ -142,30 +130,30 @@ namespace Domain.Providers
         {
             string id = "TZ" + this.CreateID();
             string? managerId = emp.Manager != null ? _employeeDataProvider.GetEmployee(emp.Manager) != null ? _employeeDataProvider.GetEmployee(emp.Manager)!.Id : null : null;
-            Data.Models.Employee employee = new()
+            DataEmployee employee = new()
             {
                 Id = id,
                 FirstName = emp.FirstName,
                 LastName = emp.LastName,
-                DateOfBirth = emp.DateOfBirth != null && emp.DateOfBirth!=string.Empty ? DateOnly.ParseExact(emp.DateOfBirth, "dd/MM/yyyy", CultureInfo.InvariantCulture) : null,
+                DateOfBirth = emp.DateOfBirth != null && emp.DateOfBirth != string.Empty ? DateOnly.ParseExact(emp.DateOfBirth, "dd/MM/yyyy", CultureInfo.InvariantCulture) : null,
 
                 ManagerId = managerId,
                 MobileNumber = emp.MobileNumber != null && emp.MobileNumber != string.Empty ? long.Parse(emp.MobileNumber) : null,
-                RoleId = _roleDataProvider.GetRoleByName(emp.JobTitle).Id,
+                RoleId = emp.JobTitle,
                 JoiningDate = DateOnly.ParseExact(emp.JoiningDate, "dd/MM/yyyy", CultureInfo.InvariantCulture),
-                Department = _departmentProvider.GetDepartmentByName(emp.Department),
+                Department = _departmentProvider.GetDepartment(emp.Department)!,
                 Email = emp.Email,
-                Location = _locationProvider.GetLocationByName(emp.Location),
-                DepartmentId= _departmentProvider.GetDepartmentByName(emp.Department).Id,
-                LocationId= _locationProvider.GetLocationByName(emp.Location).Id,
-                Role= _roleDataProvider.GetRoleByName(emp.JobTitle),
-                Manager = emp.Manager != null ? _employeeDataProvider.GetEmployee(emp.Manager) != null ? _employeeDataProvider.GetEmployee(emp.Manager)!: null : null,
-                InverseManager=_employeeDataProvider.GetEmployesUnderManager(managerId)!=null? _employeeDataProvider.GetEmployesUnderManager(managerId)!.ToList():null!,
+                Location = _locationProvider.GetLocation(emp.Location)!,
+                DepartmentId = emp.Department,
+                LocationId = emp.Location,
+                Role = _roleDataProvider.GetRoleById(emp.JobTitle),
+                Manager = emp.Manager != null ? _employeeDataProvider.GetEmployee(emp.Manager) != null ? _employeeDataProvider.GetEmployee(emp.Manager)! : null : null,
+                InverseManager = _employeeDataProvider.GetEmployesUnderManager(managerId) != null ? _employeeDataProvider.GetEmployesUnderManager(managerId)!.ToList() : null!,
+                Project = _projectProvider.GetProject(emp.Project)
             };
-            employee.Project = _projectProvider.GetProjectByName(emp.Project);
-            if(employee.Project != null)
+            if (employee.Project != null)
             {
-                employee.ProjectId= employee.Project.Id;
+                employee.ProjectId= emp.Project;
             }
             else
             {
@@ -198,9 +186,9 @@ namespace Domain.Providers
 
         public List<DTO.Employee>? GetEmployeesInformation()
         {
-            List<DTO.Employee> data = [];
-            List<Data.Models.Employee> list = _employeeDataProvider.GetEmployees().ToList();
-            foreach (Data.Models.Employee employee in list)
+            List<Employee> data = [];
+            List<DataEmployee> list = _employeeDataProvider.GetEmployees().ToList();
+            foreach (DataEmployee employee in list)
             {
                 data.Add(new DTO.Employee(employee,_departmentProvider,_locationProvider,_roleDataProvider,_projectProvider));
             }
@@ -211,11 +199,24 @@ namespace Domain.Providers
         {
             if (!string.IsNullOrEmpty(id))
             {
-                Data.Models.Employee employee = _employeeDataProvider.GetEmployee(id)!;
+                DataEmployee employee = _employeeDataProvider.GetEmployee(id)!;
                 return employee != null ? new DTO.Employee(employee, _departmentProvider, _locationProvider, _roleDataProvider, _projectProvider) : throw new EmployeeIdNotFoundException();
             }
             return null;
 
+        }
+
+        public string? GetValueById(int? id,string name)
+        {
+            
+            return name switch
+            {
+                nameof(Employee.Location) => _locationProvider.GetLocation((int)id!)?.Name!,
+                nameof(Employee.Department) => _departmentProvider.GetDepartment((int)id!)?.Name!,
+                nameof(Employee.JobTitle) => _roleDataProvider.GetRoleById((int)id!)?.Name!,
+                nameof(Employee.Project) => _projectProvider.GetProject(id)?.Name!,
+                _ => string.Empty,
+            }; ;
         }
 
         public void EditEmployee(Dictionary<int, string> pair, int choice, string value, string email)

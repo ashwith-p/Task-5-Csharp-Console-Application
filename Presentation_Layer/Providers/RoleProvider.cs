@@ -3,7 +3,6 @@ using Domain.DTO;
 using System.Reflection;
 using Domain.Providers;
 using EmployeeDirectory.Interfaces;
-using Data.Models;
 
 namespace EmployeeDirectory.Providers
 {
@@ -64,12 +63,12 @@ namespace EmployeeDirectory.Providers
                 PropertyInfo property = type.GetProperty(prop.Name)!;
                 if (prop.Name == nameof(Domain.DTO.Role.Department) )
                 {
-                    property.SetValue(Role, _employeeProvider.GetStaticValues(prop.Name));
+                    property.SetValue(Role, int.Parse(_employeeProvider.GetStaticValues(prop.Name)!));
                 }
                 else if(prop.Name == nameof(Domain.DTO.Role.Location))
                 {
-                    string? value = _employeeProvider.GetStaticValues(prop.Name);
-                    List<string>? values = value!=null?[value]:null;
+                    int? value = int.Parse(_employeeProvider.GetStaticValues(prop.Name)!);
+                    List<int>? values = value != null?[(int)value]:null;
                     property.SetValue(Role, values);
                 }
                 else
@@ -86,12 +85,12 @@ namespace EmployeeDirectory.Providers
                     PropertyInfo property = type.GetProperty(errorList[i])!;
                     if (errorList[i] == nameof(Domain.DTO.Employee.Department))
                     {
-                        property.SetValue(Role, _employeeProvider.GetStaticValues(errorList[i]));
+                        property.SetValue(Role, int.Parse(_employeeProvider.GetStaticValues(errorList[i])!));
                     }
                     else if (errorList[i] == nameof(Domain.DTO.Role.Location))
                     {
-                        string? value = _employeeProvider.GetStaticValues(errorList[i]);
-                        List<string>? values = value != null ? [value] : null;
+                        int? value = int.Parse(_employeeProvider.GetStaticValues(errorList[i])!);
+                        List<int>? values = value != null ? [(int)value] : null;
                         property.SetValue(Role, values);
                     }
                     else
@@ -112,10 +111,15 @@ namespace EmployeeDirectory.Providers
                 Type type = typeof(Domain.DTO.Role);
                 foreach (PropertyInfo prop in type.GetProperties())
                 {
-                    if(prop.Name == nameof(RoleDetail.Location))
+                    if(prop.Name == nameof(Data.Models.RoleDetail.Location))
                     {
-                        List<string> locations = (List<string>)prop.GetValue(roleInformation)!;
-                        ConsoleHelpers.ConsoleOutput($"{prop.Name} :{ string.Join(',',locations)}");
+                        List<int> locations = (List<int>)prop.GetValue(roleInformation)!;
+                        List<string> locationsString =locations.ConvertAll(x => _roleProvider.GetLocationById(x));
+                        ConsoleHelpers.ConsoleOutput($"{prop.Name} :{ string.Join(',',locationsString)}");
+                    }
+                    else if(prop.Name == nameof(Data.Models.Role.Department))
+                    {
+                        ConsoleHelpers.ConsoleOutput($"{prop.Name} : {_roleProvider.GetDepartmentById((int)(prop.GetValue(roleInformation))!)}");
                     }
                     else
                     {
