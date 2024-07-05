@@ -2,7 +2,7 @@
 
 namespace Data.Interfaces
 {
-    public interface IRoleDetailProvider
+    public interface IRoleDetailRepository
     {
         public void Add(RoleDetail roleDetail);
     }

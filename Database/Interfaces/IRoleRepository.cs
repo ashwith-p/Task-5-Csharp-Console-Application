@@ -2,7 +2,7 @@
 
 namespace Data.Interfaces
 {
-    public interface IRoleDataProvider
+    public interface IRoleRepository
     {
         public IEnumerable<Role> GetRoles();
 

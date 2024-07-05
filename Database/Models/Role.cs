@@ -18,7 +18,9 @@ public partial class Role
     public int DepartmentId { get; set; }
 
     [ForeignKey(nameof(DepartmentId))]
+    [NotMapped]
     public virtual Department Department { get; set; }=null!;
 
-    public virtual ICollection<Employee> Employees { get; set; } = new List<Employee>();
+    [NotMapped]
+    public virtual ICollection<Employee> Employees { get; set; } = [];
 }

@@ -4,13 +4,10 @@ using Data.Models;
 using EmployeeDirectory;
 namespace Data.Provider
 {
-    public class RoleDataProvider:IRoleDataProvider
+    public class RoleRepository(AshwithEmployeeDirectoryContext context) : IRoleRepository
     {
-        private readonly AshwithEmployeeDirectoryContext _context;
-        public RoleDataProvider(AshwithEmployeeDirectoryContext context)
-        {
-            _context = context;
-        }
+        private readonly AshwithEmployeeDirectoryContext _context = context;
+
         public IEnumerable<Role> GetRoles()
         {
             return _context.Roles;

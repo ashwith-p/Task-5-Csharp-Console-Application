@@ -7,14 +7,14 @@ using DataRole = Data.Models.Role;
 
 namespace Domain.Providers
 {
-    public class RoleProviders(IEmployeeProvider employeeObj, IRoleDataProvider roleDataProvider,
-        ILocationProvider locationProvider, IDepartmentProvider departmentProvider, IRoleDetailProvider roleDetailProvider) : IRoleProvider
+    public class RoleProvider(IEmployeeProvider employeeObj, IRoleRepository roleDataProvider,
+        ILocationRepository locationProvider, IDepartmentRepository departmentProvider, IRoleDetailRepository roleDetailProvider) : IRoleProvider
     {
-        private readonly IRoleDataProvider _roleDataProvider = roleDataProvider;
+        private readonly IRoleRepository _roleDataProvider = roleDataProvider;
         private readonly IEmployeeProvider _employeeObj = employeeObj;
-        private readonly ILocationProvider _locationProvider = locationProvider;
-        private readonly IDepartmentProvider _departmentProvider = departmentProvider;
-        private readonly IRoleDetailProvider _roleDetailProvider = roleDetailProvider;
+        private readonly ILocationRepository _locationProvider = locationProvider;
+        private readonly IDepartmentRepository _departmentProvider = departmentProvider;
+        private readonly IRoleDetailRepository _roleDetailProvider = roleDetailProvider;
 
         public bool IsValidRole(string value, string key)
         {

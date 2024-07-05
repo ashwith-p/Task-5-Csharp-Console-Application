@@ -30,7 +30,7 @@ namespace Domain.DTO
         public Employee()
         {}
 
-        public Employee(Data.Models.Employee emp,IDepartmentProvider departmentProvider,ILocationProvider locationProvider,IRoleDataProvider roleDataProvider,IProjectProvider projectProvider)
+        public Employee(Data.Models.Employee emp,IDepartmentRepository departmentProvider,ILocationRepository locationProvider,IRoleRepository roleDataProvider,IProjectRepository projectProvider)
         {
             
             this.FirstName = emp.FirstName;

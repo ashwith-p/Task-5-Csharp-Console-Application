@@ -17,59 +17,59 @@ namespace EmployeeDirectory.Providers
         public void EmployeeDisplayOperations()
         {
 
-            ConsoleHelpers.ConsoleOutput("1.Add Employee");
-            ConsoleHelpers.ConsoleOutput("2.Display All");
-            ConsoleHelpers.ConsoleOutput("3.Display One");
-            ConsoleHelpers.ConsoleOutput("4.Edit Employee");
-            ConsoleHelpers.ConsoleOutput("5.Delete Employee");
-            ConsoleHelpers.ConsoleOutput("6.Go back");
-            ConsoleHelpers.ConsoleOutput("Enter the choice:", false);
+            Console.WriteLine("1.Add Employee");
+            Console.WriteLine("2.Display All");
+            Console.WriteLine("3.Display One");
+            Console.WriteLine("4.Edit Employee");
+            Console.WriteLine("5.Delete Employee");
+            Console.WriteLine("6.Go back");
+            Console.Write("Enter the choice:", false);
             int choice = ConsoleHelpers.ConsoleIntegerInput();
 
             switch (choice)
             {
 
                 case 1:
-                    ConsoleHelpers.ConsoleOutput("-------------------------");
+                    Console.WriteLine("-------------------------");
                     ReadEmployee();
                     break;
                 case 2:
-                    ConsoleHelpers.ConsoleOutput("---------------------------");
+                    Console.WriteLine("---------------------------");
                     DisplayAll();
                     break;
                 case 3:
-                    ConsoleHelpers.ConsoleOutput("--------------------------");
+                    Console.WriteLine("--------------------------");
                     GetEmployeeById();
                     break;
                 case 4:
-                    ConsoleHelpers.ConsoleOutput("--------------------------");
+                    Console.WriteLine("--------------------------");
                     EditEmployeeInputService();
                     break;
                 case 5:
-                    ConsoleHelpers.ConsoleOutput("--------------------------");
-                    ConsoleHelpers.ConsoleOutput("Enter the EmailId:", false);
+                    Console.WriteLine("--------------------------");
+                    Console.Write("Enter the Employee Id:", false);
                     try
                     {
                         if (_provider.DeleteEmployee(Console.ReadLine() ?? ""))
                         {
-                            ConsoleHelpers.ConsoleOutput("Deleted Successfully");
+                            Console.WriteLine("Deleted Successfully");
                         }
                     }
                     catch (EmployeeIdNotFoundException)
                     {
-                        ConsoleHelpers.ConsoleOutput("Employee does not Exist\n");
+                        Console.WriteLine("Employee does not Exist\n");
                     }
 
                     break;
                 case 6:
-                    ConsoleHelpers.ConsoleOutput("--------------------------");
+                    Console.WriteLine("--------------------------");
                     return;
                 case -1:
-                    ConsoleHelpers.ConsoleOutput("--------------------------");
+                    Console.WriteLine("--------------------------");
                     break;
             }
-            ConsoleHelpers.ConsoleOutput("Do you want to continue(Y/N)");
-            var select = Console.ReadLine();
+            Console.WriteLine("Do you want to continue(Y/N)");
+            string? select = Console.ReadLine();
             
             if (select?.ToLower() == "n")
             {
@@ -85,7 +85,7 @@ namespace EmployeeDirectory.Providers
             Type type = typeof(Employee);
             foreach (PropertyInfo prop in type.GetProperties())
             {
-                ConsoleHelpers.ConsoleOutput($"Enter the Value for {prop.Name}:", false);
+                Console.Write($"Enter the Value for {prop.Name}:", false);
                 PropertyInfo property = type.GetProperty(prop.Name)!;
                 if (prop.Name == nameof(Employee.Department) || prop.Name == nameof(Employee.Project))
                 {
@@ -117,8 +117,8 @@ namespace EmployeeDirectory.Providers
             {
                 for (int i = 0; i < inCorrect.Count; i++)
                 {
-                    ConsoleHelpers.ConsoleOutput(_errorMessages.messages[inCorrect[i]]);
-                    ConsoleHelpers.ConsoleOutput($"Enter the Value for {inCorrect[i]}:", false);
+                    Console.WriteLine(_errorMessages.messages[inCorrect[i]]);
+                    Console.Write($"Enter the Value for {inCorrect[i]}:", false);
                     PropertyInfo property = type.GetProperty(inCorrect[i])!;
                     if (inCorrect[i] == nameof(Employee.Department) || inCorrect[i] == nameof(Employee.Project))
                     {
@@ -164,18 +164,18 @@ namespace EmployeeDirectory.Providers
             {
                 if (!string.IsNullOrEmpty(message))
                 {
-                    ConsoleHelpers.ConsoleOutput(message, false);
+                    Console.Write(message, false);
                 }
                 else
                 {
-                    ConsoleHelpers.ConsoleOutput("Enter the Value:", false);
+                    Console.Write("Enter the Value:", false);
                 }
                 value = Console.ReadLine() ?? "";
                 status = _provider.IsValidEmployee(value, choice);
                 if (!status)
                 {
-                    ConsoleHelpers.ConsoleOutput("Enter valid input");
-                    ConsoleHelpers.ConsoleOutput("--------------------------");
+                    Console.WriteLine("Enter valid input");
+                    Console.WriteLine("--------------------------");
                 }
             }
             return value;
@@ -193,12 +193,12 @@ namespace EmployeeDirectory.Providers
             List<string> staticData;
             staticData = _provider.GetStaticData(choice, staticValue);
             string value = string.Empty;
-            ConsoleHelpers.ConsoleOutput("");
+            Console.WriteLine("");
             for (int i = 0; i < staticData.Count; i++)
             {
-                ConsoleHelpers.ConsoleOutput($"{i + 1}.{staticData[i]}");
+                Console.WriteLine($"{i + 1}.{staticData[i]}");
             }
-            string input = Console.ReadLine() ?? string.Empty;
+                string input = Console.ReadLine() ?? string.Empty;
             if ((choice == nameof(Employee.Project) || choice == nameof(Employee.Manager)) && input.Length == 0)
             {
                 return null;
@@ -224,35 +224,35 @@ namespace EmployeeDirectory.Providers
                 foreach (Employee employee in employees)
                 {
                     this.PrintEmployee(employee);
-                    ConsoleHelpers.ConsoleOutput("--------------------------");
-                    ConsoleHelpers.ConsoleOutput("--------------------------");
+                    Console.WriteLine("--------------------------");
+                    Console.WriteLine("--------------------------");
                 }
 
             }
             catch (EmployeeIdNotFoundException)
             {
-                ConsoleHelpers.ConsoleOutput("Employee does not Exist\n");
+                Console.WriteLine("Employee does not Exist\n");
             }
         }
 
         private void PrintEmployee(Employee employee)
         {
-            ConsoleHelpers.ConsoleOutput("FirstName:" + employee.FirstName);
-            ConsoleHelpers.ConsoleOutput("LastName:" + employee.LastName);
-            ConsoleHelpers.ConsoleOutput("DateOfBirth:" + employee.DateOfBirth);
-            ConsoleHelpers.ConsoleOutput("Email ID:" + employee.Email);
-            ConsoleHelpers.ConsoleOutput($"Phone Number:{employee.MobileNumber}");
-            ConsoleHelpers.ConsoleOutput($"Joining Date:{employee.JoiningDate}");
-            ConsoleHelpers.ConsoleOutput($"Department:{_provider.GetValueById(employee.Department,nameof(employee.Department))}");
-            ConsoleHelpers.ConsoleOutput($"Location:{_provider.GetValueById(employee.Location,nameof(employee.Location))}");
-            ConsoleHelpers.ConsoleOutput($"Job Title:{_provider.GetValueById(employee.JobTitle,nameof(employee.JobTitle))}");
-            ConsoleHelpers.ConsoleOutput($"Manager:{employee.Manager}");
-            ConsoleHelpers.ConsoleOutput($"Project:{_provider.GetValueById(employee.Project,nameof(employee.Project))}");
+            Console.WriteLine("FirstName:" + employee.FirstName);
+            Console.WriteLine("LastName:" + employee.LastName);
+            Console.WriteLine("DateOfBirth:" + employee.DateOfBirth);
+            Console.WriteLine("Email ID:" + employee.Email);
+            Console.WriteLine($"Phone Number:{employee.MobileNumber}");
+            Console.WriteLine($"Joining Date:{employee.JoiningDate}");
+            Console.WriteLine($"Department:{_provider.GetValueById(employee.Department,nameof(employee.Department))}");
+            Console.WriteLine($"Location:{_provider.GetValueById(employee.Location,nameof(employee.Location))}");
+            Console.WriteLine($"Job Title:{_provider.GetValueById(employee.JobTitle,nameof(employee.JobTitle))}");
+            Console.WriteLine($"Manager:{employee.Manager}");
+            Console.WriteLine($"Project:{_provider.GetValueById(employee.Project,nameof(employee.Project))}");
         }
 
         public void GetEmployeeById()
         {
-            ConsoleHelpers.ConsoleOutput("Enter the Employee ID:", false);
+            Console.Write("Enter the Employee ID:", false);
             string id = Console.ReadLine() ?? string.Empty;
             try
             {
@@ -261,7 +261,7 @@ namespace EmployeeDirectory.Providers
             }
             catch (EmployeeIdNotFoundException)
             {
-                ConsoleHelpers.ConsoleOutput("Employee does not Exist\n");
+                Console.WriteLine("Employee does not Exist\n");
             }
         }
 
@@ -269,7 +269,7 @@ namespace EmployeeDirectory.Providers
         {
             try
             {
-                ConsoleHelpers.ConsoleOutput("Enter the Employee ID:", false);
+                Console.Write("Enter the Employee ID:", false);
                 string Email = Console.ReadLine() ?? string.Empty;
                 Employee employee = _provider.GetEmployee(Email) ?? throw new EmployeeIdNotFoundException();
                 bool status = false;
@@ -280,11 +280,11 @@ namespace EmployeeDirectory.Providers
                     Dictionary<int, string> pair = [];
                     foreach (PropertyInfo prop in type.GetProperties())
                     {
-                        ConsoleHelpers.ConsoleOutput($"{i} {prop.Name}");
+                        Console.WriteLine($"{i} {prop.Name}");
                         pair[i] = prop.Name;
                         i++;
                     }
-                    ConsoleHelpers.ConsoleOutput("Enter the choice:", false);
+                    Console.Write("Enter the choice:", false);
                     bool isValidInput = false;
                     int choice = ConsoleHelpers.ConsoleIntegerInput();
                     if (choice > 0 && choice <= pair.Count)
@@ -292,7 +292,7 @@ namespace EmployeeDirectory.Providers
                         string data = string.Empty;
                         if (pair[choice] == nameof(Employee.Department))
                         {
-                            ConsoleHelpers.ConsoleOutput("You cant edit the department");
+                            Console.WriteLine("You cant edit the department");
                             break;
                         }
                         else if (pair[choice] == nameof(Employee.JobTitle))
@@ -330,9 +330,9 @@ namespace EmployeeDirectory.Providers
                     }
                     if (!isValidInput)
                     {
-                        ConsoleHelpers.ConsoleOutput("Enter Valid Input:");
+                        Console.WriteLine("Enter Valid Input:");
                     }
-                    ConsoleHelpers.ConsoleOutput("Do you want to continue(Y/N)");
+                    Console.WriteLine("Do you want to continue(Y/N)");
                     var select = Console.ReadLine();
                     if (select?.ToLower() == "n")
                     {
@@ -342,7 +342,7 @@ namespace EmployeeDirectory.Providers
             }
             catch (EmployeeIdNotFoundException)
             {
-                ConsoleHelpers.ConsoleOutput("Employee does not Exist\n");
+                Console.WriteLine("Employee does not Exist\n");
             }
         }
     }

@@ -2,7 +2,7 @@
 
 namespace Data.Interfaces
 {
-    public interface IEmployeeDataProvider
+    public interface IEmployeeRepository
     {
         public Employee? GetEmployee(string id);
 

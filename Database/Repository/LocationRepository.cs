@@ -4,13 +4,10 @@ using EmployeeDirectory;
 
 namespace Data.Provider
 {
-    public class LocationProvider:ILocationProvider
+    public class LocationRepository(AshwithEmployeeDirectoryContext context) : ILocationRepository
     {
-        private readonly AshwithEmployeeDirectoryContext _context;
-        public LocationProvider(AshwithEmployeeDirectoryContext context)
-        {
-            _context = context;
-        }
+        private readonly AshwithEmployeeDirectoryContext _context = context;
+
         public Location? GetLocation(int id)
         {
             return _context.Locations.Where(s => s.Id == id).FirstOrDefault();

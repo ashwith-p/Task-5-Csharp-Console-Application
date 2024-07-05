@@ -2,8 +2,10 @@
 
 namespace Data.Interfaces
 {
-    public interface IProjectProvider
+    public interface IProjectRepository
     {
         public Project? GetProject(int? id);
+
+        public IEnumerable<Project> GetAllProjects();
     }
 }

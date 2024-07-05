@@ -8,13 +8,13 @@ using System.Globalization;
 
 namespace Data.Provider
 {
-    public class EmployeeDataProvider(AshwithEmployeeDirectoryContext context, IRoleDataProvider roleDataProvider, ILocationProvider locationProvider
-            , IProjectProvider projectProvider) : IEmployeeDataProvider
+    public class EmployeeRepository(AshwithEmployeeDirectoryContext context, IRoleRepository roleDataProvider, ILocationRepository locationProvider
+            , IProjectRepository projectProvider) : IEmployeeRepository
     {
         private readonly AshwithEmployeeDirectoryContext _context = context;
-        private readonly IRoleDataProvider _roleDataProvider = roleDataProvider;
-        private readonly IProjectProvider _projectProvider = projectProvider;
-        private readonly ILocationProvider _locationProvider = locationProvider;
+        private readonly IRoleRepository _roleDataProvider = roleDataProvider;
+        private readonly IProjectRepository _projectProvider = projectProvider;
+        private readonly ILocationRepository _locationProvider = locationProvider;
 
         public Employee? GetEmployee(string id)
         {
@@ -71,7 +71,7 @@ namespace Data.Provider
         public void EditEmployee(Dictionary<int, string> pair, int choice, string value, string employeeId)
         {
             int? id = null;
-            bool flag = false;
+            bool isId = true;
             Employee emp = _context.Employees.Where(s => s.Id==employeeId).First();
             if (pair[choice]==nameof(Employee.Manager))
             {
@@ -94,10 +94,10 @@ namespace Data.Provider
             }
             else
             {
-                flag = true;
+                isId = false;
             }
             var propertyInfo = typeof(Employee).GetProperty(pair[choice], BindingFlags.Public | BindingFlags.Instance);
-            if (flag)
+            if (!isId)
             {
                 if (pair[choice] == nameof(Employee.ManagerId))
                 {
@@ -106,6 +106,10 @@ namespace Data.Provider
                 else if(pair[choice] == nameof(Employee.DateOfBirth) || pair[choice]== nameof(Employee.JoiningDate))
                 {
                     propertyInfo!.SetValue(emp, DateOnly.ParseExact(value, "dd/MM/yyyy", CultureInfo.InvariantCulture));
+                }
+                else if (pair[choice]==nameof(Employee.MobileNumber))
+                {
+                    propertyInfo!.SetValue(emp, long.Parse(value));
                 }
                 else
                 {

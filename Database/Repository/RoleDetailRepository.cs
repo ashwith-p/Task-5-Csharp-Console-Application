@@ -4,13 +4,9 @@ using EmployeeDirectory;
 
 namespace Data.Provider
 {
-    public class RoleDetailsProvider:IRoleDetailProvider
+    public class RoleDetailsRepository(AshwithEmployeeDirectoryContext context) : IRoleDetailRepository
     {
-        private readonly AshwithEmployeeDirectoryContext _context;
-        public RoleDetailsProvider(AshwithEmployeeDirectoryContext context)
-        {
-            _context = context;
-        }
+        private readonly AshwithEmployeeDirectoryContext _context = context;
 
         public void Add(RoleDetail roleDetail)
         {

@@ -17,30 +17,30 @@ namespace EmployeeDirectory.Providers
 
         public void RoleDisplayOperations()
         {
-            ConsoleHelpers.ConsoleOutput("1.Add Role");
-            ConsoleHelpers.ConsoleOutput("2.Display All");
-            ConsoleHelpers.ConsoleOutput("3. Go back");
-            ConsoleHelpers.ConsoleOutput("Enter the choice:", false);
+            Console.WriteLine("1.Add Role");
+            Console.WriteLine("2.Display All");
+            Console.WriteLine("3. Go back");
+            Console.Write("Enter the choice:", false);
 
             int choice = ConsoleHelpers.ConsoleIntegerInput();
             switch (choice)
             {
                 case 1:
-                    ConsoleHelpers.ConsoleOutput("--------------------------");
+                    Console.WriteLine("--------------------------");
                     ReadRole();
                     break;
                 case 2:
-                    ConsoleHelpers.ConsoleOutput("--------------------------");
+                    Console.WriteLine("--------------------------");
                     DisplayRoles();
                     break;
                 case 3:
-                    ConsoleHelpers.ConsoleOutput("--------------------------");
+                    Console.WriteLine("--------------------------");
                     return;
                 case -1:
-                    ConsoleHelpers.ConsoleOutput("--------------------------");
+                    Console.WriteLine("--------------------------");
                     break;
             }
-            ConsoleHelpers.ConsoleOutput("Do you want to continue(Y/N)");
+            Console.WriteLine("Do you want to continue(Y/N)");
             var select = Console.ReadLine();
             if (select?.ToLower() == "n")
             {
@@ -57,7 +57,7 @@ namespace EmployeeDirectory.Providers
             Type type = typeof(Domain.DTO.Role);
             foreach (PropertyInfo prop in type.GetProperties())
             {
-                ConsoleHelpers.ConsoleOutput($"Enter the Value for {prop.Name}:", false);
+                Console.Write($"Enter the Value for {prop.Name}:", false);
                 PropertyInfo property = type.GetProperty(prop.Name)!;
                 if (prop.Name == nameof(Domain.DTO.Role.Department) )
                 {
@@ -79,7 +79,7 @@ namespace EmployeeDirectory.Providers
             {
                 for (int i = 0; i < errorList.Count; i++)
                 {
-                    ConsoleHelpers.ConsoleOutput($"Enter the Value for {errorList[i]}:", false);
+                    Console.Write($"Enter the Value for {errorList[i]}:", false);
                     PropertyInfo property = type.GetProperty(errorList[i])!;
                     if (errorList[i] == nameof(Domain.DTO.Employee.Department))
                     {
@@ -113,20 +113,20 @@ namespace EmployeeDirectory.Providers
                     {
                         List<int> locations = (List<int>)prop.GetValue(roleInformation)!;
                         List<string> locationsString =locations.ConvertAll(x => _roleProvider.GetLocationById(x));
-                        ConsoleHelpers.ConsoleOutput($"{prop.Name} :{ string.Join(',',locationsString)}");
+                        Console.WriteLine($"{prop.Name} :{ string.Join(',',locationsString)}");
                     }
                     else if(prop.Name == nameof(Data.Models.Role.Department))
                     {
-                        ConsoleHelpers.ConsoleOutput($"{prop.Name} : {_roleProvider.GetDepartmentById((int)(prop.GetValue(roleInformation))!)}");
+                        Console.WriteLine($"{prop.Name} : {_roleProvider.GetDepartmentById((int)(prop.GetValue(roleInformation))!)}");
                     }
                     else
                     {
-                        ConsoleHelpers.ConsoleOutput($"{prop.Name} : {prop.GetValue(roleInformation)}");
+                        Console.WriteLine($"{prop.Name} : {prop.GetValue(roleInformation)}");
                     }
                    
                 }
-                ConsoleHelpers.ConsoleOutput("----------------------------------------------");
-                ConsoleHelpers.ConsoleOutput("----------------------------------------------");
+                Console.WriteLine("----------------------------------------------");
+                Console.WriteLine("----------------------------------------------");
             }
         }
 

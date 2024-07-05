@@ -2,7 +2,7 @@
 
 namespace Data.Interfaces
 {
-    public interface ILocationProvider
+    public interface ILocationRepository
     {
         public Location? GetLocation(int id);
 

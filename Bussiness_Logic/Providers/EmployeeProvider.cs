@@ -10,16 +10,15 @@ using DataEmployee = Data.Models.Employee;
 //
 namespace Domain.Providers
 {
-    public class EmployeeProviders(IDatabaseOperations databaseObj, IEmployeeDataProvider employeeDataProvider, IRoleDataProvider roleDataProvider, IDepartmentProvider departmentProvider
-            , ILocationProvider locationProvider, IProjectProvider projectProvider) : IEmployeeProvider
+    public class EmployeeProvider( IEmployeeRepository employeeDataProvider, IRoleRepository roleDataProvider, IDepartmentRepository departmentProvider
+            , ILocationRepository locationProvider, IProjectRepository projectProvider) : IEmployeeProvider
     {
 
-        private readonly IDatabaseOperations _databaseObj = databaseObj;
-        private readonly IEmployeeDataProvider _employeeDataProvider = employeeDataProvider;
-        private readonly IRoleDataProvider _roleDataProvider = roleDataProvider;
-        private readonly IProjectProvider _projectProvider = projectProvider;
-        private readonly ILocationProvider _locationProvider = locationProvider;
-        private readonly IDepartmentProvider _departmentProvider = departmentProvider;
+        private readonly IEmployeeRepository _employeeDataProvider = employeeDataProvider;
+        private readonly IRoleRepository _roleDataProvider = roleDataProvider;
+        private readonly IProjectRepository _projectProvider = projectProvider;
+        private readonly ILocationRepository _locationProvider = locationProvider;
+        private readonly IDepartmentRepository _departmentProvider = departmentProvider;
 
         public List<string> GetStaticData(string name, int? value = null)
         {
@@ -39,7 +38,11 @@ namespace Domain.Providers
                 }
             }
 
-            return _databaseObj.GetStaticData(name).ToList();
+            else if(name == nameof(DTO.Employee.Department))
+            {
+                return _departmentProvider.GetAllDepartment().Select(dept=>dept.Name).ToList();
+            }
+            return _projectProvider.GetAllProjects().Select(project=>project.Name).ToList();
         }
 
         public bool IsValidName(string name)
@@ -55,7 +58,6 @@ namespace Domain.Providers
             {
 
                 case nameof(DTO.Employee.FirstName):
-                    return IsValidName(data);
                 case nameof(DTO.Employee.LastName):
                     return IsValidName(data);
                 case nameof(DTO.Employee.DateOfBirth):
