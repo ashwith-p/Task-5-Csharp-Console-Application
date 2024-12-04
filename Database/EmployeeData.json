@@ -1,0 +1,30 @@
+[
+  {
+    "Id": "TZ1434",
+    "FirstName": "Ashwith",
+    "LastName": "Punugupati",
+    "DateOfBirth": "17/12/2002",
+    "Email": "ashwith@technovert.com",
+    "MobileNumber": "9676436755",
+    "JoiningDate": "17/01/2024",
+    "Location": "Hyderabad",
+    "JobTitle": "Intern",
+    "Department": "Product Engg.",
+    "Manager": "Sandeep",
+    "Project": ""
+  },
+  {
+    "Id": "TZ1765",
+    "FirstName": "djfd",
+    "LastName": "dslkjd",
+    "DateOfBirth": "17/12/2000",
+    "Email": "A@g.com",
+    "MobileNumber": "9876543211",
+    "JoiningDate": "12/12/2023",
+    "Location": "dfcjndc",
+    "JobTitle": "dckncdx",
+    "Department": "Quality Analyst",
+    "Manager": "dcnkcd",
+    "Project": "Currency Converter"
+  }
+]

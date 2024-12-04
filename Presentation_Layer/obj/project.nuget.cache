@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "QRqCBCAMU7yHvmM0motBhtuwdCJK/zccY2rav6dB5XbbxYgnFvTOqfUQfHDJQLFV2iSWo4S+se3kj1hKaAb4bQ==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\ashwith.p\\Source\\Repos\\ashwith-p\\Task-5-Csharp-Console-Application\\Presentation_Layer\\EmployeeDirectory.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\ashwith.p\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\8.0.0\\microsoft.extensions.dependencyinjection.8.0.0.nupkg.sha512",
+    "C:\\Users\\ashwith.p\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.0\\microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
